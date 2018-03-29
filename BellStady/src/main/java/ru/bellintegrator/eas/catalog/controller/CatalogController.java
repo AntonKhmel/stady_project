@@ -30,28 +30,30 @@ public class CatalogController {
 
     /**
      * processes a request for get all docs
-     * @return ResponseEntity<List<Document>>
+     * @return List<DocType>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/docs", method = {POST})
-    public ResponseEntity<List<DocType>> allDocs() throws DataAccessError {
-        List<DocType> documentList = catalogService.allDocs();
+    public List<DocType> allDocs() throws DataAccessError {
         LOG.info("getting all docs");
 
-        return new ResponseEntity<List<DocType>>(documentList, HttpStatus.OK);
+        List<DocType> documentList = catalogService.allDocs();
+
+        return documentList;
     }
 
     /**
      * processes a request for get all countries
-     * @return ResponseEntity<List<Country>>
+     * @return List<Country>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/countries", method = {POST})
-    public ResponseEntity<List<Country>> allCountries() throws DataAccessError {
-        List<Country> countryList = catalogService.allCountries();
+    public List<Country> allCountries() throws DataAccessError {
         LOG.info("getting all countries");
 
-        return new ResponseEntity<List<Country>>(countryList, HttpStatus.OK);
+        List<Country> countryList = catalogService.allCountries();
+
+        return countryList;
     }
 
     /**
@@ -62,6 +64,7 @@ public class CatalogController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception: {}", exception);
+
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

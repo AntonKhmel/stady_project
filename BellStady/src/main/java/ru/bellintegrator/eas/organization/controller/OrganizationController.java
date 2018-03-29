@@ -32,57 +32,61 @@ public class OrganizationController {
      * processes a request for getting list organizations by filters name, inn, isActive,
      * and calls the corresponding method of business logic
      * @param organization
-     * @return ResponseEntity<List<Organization>>
+     * @return List<Organization>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/list", method = {POST})
-    public ResponseEntity<List<Organization>> filterOrganizations(@RequestBody Organization organization) throws DataAccessError {
-        List<Organization> organizationList = organizationService.filterOrganizations(organization);
+    public List<Organization> filterOrganizations(@RequestBody Organization organization) throws DataAccessError {
         LOG.info("getting list organizations by filter");
 
-        return new ResponseEntity<List<Organization>>(organizationList, HttpStatus.OK);
+        List<Organization> organizationList = organizationService.filterOrganizations(organization);
+
+        return organizationList;
     }
 
     /**
      * processes a request for get the Organization by id
      * @param id
-     * @return ResponseEntity<Organization>
+     * @return Organization
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/{id}", method= {GET})
-    public ResponseEntity<Organization> getOrganizationById(@PathVariable("id") int id) throws DataAccessError {
-        Organization organization = organizationService.getOrganizationById(id);
+    public Organization getOrganizationById(@PathVariable("id") int id) throws DataAccessError {
         LOG.info("get the organization by id: {}", id);
 
-        return new ResponseEntity<Organization>(organization, HttpStatus.OK);
+        Organization organization = organizationService.getOrganizationById(id);
+
+        return organization;
     }
 
     /**
      * processes a request for update the Organization
      * @param organization
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/update", method = {POST})
-    public ResponseEntity<Void> updateOrganization(@RequestBody Organization organization) throws DataAccessError {
-        organizationService.updateOrganization(organization);
+    public HttpStatus updateOrganization(@RequestBody Organization organization) throws DataAccessError {
         LOG.info("update the organization: {}", organization);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        organizationService.updateOrganization(organization);
+
+        return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the Organization
      * @param organization
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/save", method = {POST})
-    public ResponseEntity<Void> saveOrganization(@RequestBody Organization organization) throws DataAccessError {
-        organizationService.saveOrganization(organization);
+    public HttpStatus saveOrganization(@RequestBody Organization organization) throws DataAccessError {
         LOG.info("save the organization: {}", organization);
 
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        organizationService.saveOrganization(organization);
+
+        return HttpStatus.CREATED;
     }
 
     /**
@@ -93,6 +97,7 @@ public class OrganizationController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception (OrganizationController): {}", exception);
+
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

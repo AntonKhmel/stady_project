@@ -33,56 +33,65 @@ public class EmployeeController {
      * middleName, position, docCode, citizenshipCode,
      * and calls the corresponding method of business logic
      * @param employee
-     * @return result ResponseEntity<List<Employee>>
+     * @return List<Employee>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/list", method = {POST})
-    public ResponseEntity<List<Employee>> filterEmployees(@RequestBody Employee employee) throws DataAccessError {
-        List<Employee> employeeList = employeeService.filterEmployees(employee);
+    public List<Employee> filterEmployees(@RequestBody Employee employee) throws DataAccessError {
         LOG.info("getting list employees by filter");
-        return new ResponseEntity<List<Employee>>(employeeList, HttpStatus.OK);
+
+        List<Employee> employeeList = employeeService.filterEmployees(employee);
+
+        return employeeList;
     }
 
     /**
      * processes a request for delete the employee by id
      * @param id
-     * @return ResponseEntity<Boolean>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/{id}", method= {GET})
-    public ResponseEntity<Boolean> deleteEmployeeById(@PathVariable("id") int id) throws DataAccessError {
-        boolean delete = employeeService.deleteEmployeeById(id);
+    public HttpStatus deleteEmployeeById(@PathVariable("id") int id) throws DataAccessError {
         LOG.info("delete the employee by id: {}", id);
 
-        return new ResponseEntity<Boolean>(delete, HttpStatus.OK);
+        boolean delete = employeeService.deleteEmployeeById(id);
+
+        if (delete) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.NOT_FOUND;
+        }
     }
 
     /**
      * processes a request for update the employee
      * @param employee
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/update", method = {POST})
-    public ResponseEntity<Void> updateEmployee(@RequestBody Employee employee) throws DataAccessError {
-        employeeService.updateEmployee(employee);
+    public HttpStatus updateEmployee(@RequestBody Employee employee) throws DataAccessError {
         LOG.info("update the employee: {}", employee);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        employeeService.updateEmployee(employee);
+
+        return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the employee
      * @param employee
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/save", method = {POST})
-    public ResponseEntity<Void> saveEmployee(@RequestBody Employee employee) throws DataAccessError {
-        employeeService.saveEmployee(employee);
+    public HttpStatus saveEmployee(@RequestBody Employee employee) throws DataAccessError {
         LOG.info("save the employee: {}", employee);
 
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        employeeService.saveEmployee(employee);
+
+        return HttpStatus.CREATED;
     }
 
     /**
@@ -93,6 +102,7 @@ public class EmployeeController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception: {}", exception);
+
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

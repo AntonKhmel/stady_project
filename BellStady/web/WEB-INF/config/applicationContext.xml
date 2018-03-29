@@ -29,6 +29,8 @@
         <jdbc:script location="classpath:data.sql"/>
     </jdbc:initialize-database>
 
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
     <!-- REST template configuration -->
     <bean id="restTemplate" class="org.springframework.web.client.RestTemplate"/>
 

@@ -65,9 +65,9 @@ public class CatalogControllerUnitTest {
 
     @Test
     public void allCountries() throws Exception {
-        List<Country> documentList = Arrays.asList(new Country(0, "Russia", 172));
+        List<Country> countryList = Arrays.asList(new Country(0, "Russia", 172));
 
-        when(catalogService.allCountries()).thenReturn(documentList);
+        when(catalogService.allCountries()).thenReturn(countryList);
 
         mockMvc.perform(post("/api/countries"))
                 .andExpect(status().isOk())

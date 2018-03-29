@@ -30,42 +30,49 @@ public class AuthenticationController {
     /**
      * processes a request for save registration
      * @param authentication
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/registr", method = {POST})
-    public ResponseEntity<Void> registration(@RequestBody Authentication authentication) throws DataAccessError {
-        authenticationService.registration(authentication);
+    public HttpStatus registration(@RequestBody Authentication authentication) throws DataAccessError {
         LOG.info("creating new registration: {}", authentication);
 
-        return new ResponseEntity<Void>(null, null, HttpStatus.CREATED);
+        authenticationService.registration(authentication);
+
+        return HttpStatus.CREATED;
     }
 
     /**
      * processes a request for send activation code
-     * @return ResponseEntity<Activation>
+     * @return Activation
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/activation/code", method= {GET})
-    public ResponseEntity<Activation> sendActivationCode() throws DataAccessError {
-        Activation activation = authenticationService.sendActivationCode();
-        LOG.info("sended activation code: {}", activation);
+    public Activation sendActivationCode() throws DataAccessError {
+        LOG.info("sended activation code");
 
-        return new ResponseEntity<Activation>(activation, HttpStatus.OK);
+        Activation activation = authenticationService.sendActivationCode();
+
+        return activation;
     }
 
     /**
      * processes a request for check authentication
      * @param authentication
-     * @return ResponseEntity<Boolean>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/login", method= RequestMethod.POST)
-    public ResponseEntity<Boolean> checkAuthentication(@RequestBody Authentication authentication) throws DataAccessError {
-        boolean check = authenticationService.checkAuthentication(authentication);
+    public HttpStatus checkAuthentication(@RequestBody Authentication authentication) throws DataAccessError {
         LOG.info("check authentication: {}", authentication);
 
-        return new ResponseEntity<Boolean>(check, HttpStatus.OK);
+        boolean check = authenticationService.checkAuthentication(authentication);
+
+        if (check) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.NOT_FOUND;
+        }
     }
 
     /**
@@ -76,6 +83,7 @@ public class AuthenticationController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception: {}", exception);
+
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

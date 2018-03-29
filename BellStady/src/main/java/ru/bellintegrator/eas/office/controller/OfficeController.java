@@ -33,57 +33,65 @@ public class OfficeController {
      * middleName,
      * and calls the corresponding method of business logic
      * @param office
-     * @return ResponseEntity<List<Office>>
+     * @return List<Office>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/list", method = {POST})
-    public ResponseEntity<List<Office>> filterOffices(@RequestBody Office office) throws DataAccessError {
-        List<Office> officeList = officeService.filterOffices(office);
+    public List<Office> filterOffices(@RequestBody Office office) throws DataAccessError {
         LOG.info("getting list offices by filter");
 
-        return new ResponseEntity<List<Office>>(officeList, HttpStatus.OK);
+        List<Office> officeList = officeService.filterOffices(office);
+
+        return officeList;
     }
 
     /**
      * processes a request for delete the Office by id
      * @param id
-     * @return ResponseEntity<Boolean>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/{id}", method= {GET})
-    public ResponseEntity<Boolean> deleteOfficeById(@PathVariable("id") int id) throws DataAccessError {
-        boolean delete = officeService.deleteOfficeById(id);
+    public HttpStatus deleteOfficeById(@PathVariable("id") int id) throws DataAccessError {
         LOG.info("delete the office by id: {}", id);
 
-        return new ResponseEntity<Boolean>(delete, HttpStatus.OK);
+        boolean delete = officeService.deleteOfficeById(id);
+
+        if (delete) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.NOT_FOUND;
+        }
     }
 
     /**
      * processes a request for update the Office
      * @param office
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/update", method = {POST})
-    public ResponseEntity updateOffice(@RequestBody Office office) throws DataAccessError {
-        officeService.updateOffice(office);
+    public HttpStatus updateOffice(@RequestBody Office office) throws DataAccessError {
         LOG.info("update the office: {}", office);
 
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        officeService.updateOffice(office);
+
+        return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the Office
      * @param office
-     * @return ResponseEntity<Void>
+     * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/save", method = {POST})
-    public ResponseEntity<Void> saveOffice(@RequestBody Office office) throws DataAccessError {
-        officeService.saveOffice(office);
+    public HttpStatus saveOffice(@RequestBody Office office) throws DataAccessError {
         LOG.info("save the office: {}", office);
 
-        return new ResponseEntity<Void>(HttpStatus.CREATED);
+        officeService.saveOffice(office);
+
+        return HttpStatus.CREATED;
     }
 
     /**
@@ -94,6 +102,7 @@ public class OfficeController {
     @ExceptionHandler
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception: {}", exception);
+
         return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

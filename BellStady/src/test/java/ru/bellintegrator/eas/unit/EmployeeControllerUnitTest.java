@@ -58,7 +58,6 @@ public class EmployeeControllerUnitTest {
                 "Ivanovich", position, new DocType(), new Citizenship(), new Phone(), true));
         Employee employee = new Employee(0, "Ivan", "", "", new Position(),
                 new DocType(), new Citizenship(), new Phone(), true);
-        String result = "[Office:{id: 3; name: Milex; is active: true;}]";
 
         when(employeeService.filterEmployees(employee)).thenReturn(employeeList);
 

@@ -53,7 +53,7 @@ public class OrganizationControllerUnitTest {
 
     @Test
     public void filterOrganizations() throws Exception {
-        List<Organization> organizationList = Arrays.asList(new Organization(3, "Abradoks", "",
+        List<Organization> organizationList = Arrays.asList(new Organization(1, "Abradoks", "",
                 new Requisite(), new Address(), new Phone(), true));
         Organization organization = new Organization(0, "Abradoks", "", new Requisite(),
                 new Address(), new Phone(), true);
@@ -65,7 +65,7 @@ public class OrganizationControllerUnitTest {
                 .content(asJsonString(organization)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(3)))
+                .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Abradoks")))
                 .andExpect(jsonPath("$[0].isActive", is(true)));
 
