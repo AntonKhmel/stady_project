@@ -2,6 +2,7 @@ package ru.bellintegrator.eas.organization.dao;
 
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.organization.model.Organization;
+import ru.bellintegrator.eas.organization.model.view.OrganizationView;
 
 import java.util.List;
 
@@ -10,11 +11,11 @@ import java.util.List;
  */
 public interface OrganizationDAO {
     /**
-     * @param organization
+     * @param organizationView
      * @return List<Organization>
      * @throws DataAccessError If an exception access data
      */
-    List<Organization> filterOrganizations(Organization organization) throws DataAccessError;
+    List<Organization> filterOrganizations(OrganizationView organizationView) throws DataAccessError;
 
 
     /**
@@ -24,10 +25,10 @@ public interface OrganizationDAO {
     Organization getOrganizationById(int id) throws DataAccessError;
 
     /**
-     * @param organization
+     * @param organizationView
      * @throws DataAccessError If an exception access data
      */
-    void updateOrganization(Organization organization) throws DataAccessError;
+    void updateOrganization(OrganizationView organizationView) throws DataAccessError;
 
     /**
      * @param organization

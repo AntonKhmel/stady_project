@@ -4,14 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.bellintegrator.eas.authentication.dao.AuthenticationDAO;
-import ru.bellintegrator.eas.authentication.model.Activation;
 import ru.bellintegrator.eas.authentication.model.Authentication;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.organization.model.Organization;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -43,11 +42,11 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     // send activation code
     @Override
-    public Activation sendActivationCode() throws DataAccessError {
+    public ActivationView sendActivationCode() throws DataAccessError {
         try {
             LOG.info("send activation code");
 
-            return new Activation();
+            return new ActivationView();
         } catch (Exception ex) {
             throw new DataAccessError("Data access error in the method of the " +
                     "sendActivationCode object the AuthenticationDAOImpl");
@@ -56,14 +55,14 @@ public class AuthenticationDAOImpl implements AuthenticationDAO {
 
     // check authentication
     @Override
-    public boolean checkAuthentication(Authentication authentication) throws DataAccessError {
+    public boolean checkAuthentication(AuthenticationView authenticationView) throws DataAccessError {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Authentication> criteria = builder.createQuery(Authentication.class);
 
             Root<Authentication> root = criteria.from(Authentication.class);
-            criteria.where(builder.equal(root.get("login"), authentication.getLogin()));
-            criteria.where(builder.equal(root.get("password"), authentication.getPassword()));
+            criteria.where(builder.equal(root.get("login"), authenticationView.getLogin()));
+            criteria.where(builder.equal(root.get("password"), authenticationView.getPassword()));
             TypedQuery<Authentication> query = entityManager.createQuery(criteria);
             int result = query.getMaxResults();
 

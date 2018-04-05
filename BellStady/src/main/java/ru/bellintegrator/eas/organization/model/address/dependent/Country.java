@@ -60,7 +60,8 @@ public class Country {
     public void setCode(int code) {
         this.code = code;
     }
-// equals and hashCode
+
+    // equals and hashCode
 
     @Override
     public boolean equals(Object o) {
@@ -97,17 +98,6 @@ public class Country {
         builder.append("; code: ");
         builder.append(getCode());
         builder.append(";");
-        builder.append("}");
-
-        return builder.toString();
-    }
-
-    public String shortToString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("country:");
-        builder.append("{name: ");
-        builder.append(getName());
-        builder.append("; ");
         builder.append("}");
 
         return builder.toString();

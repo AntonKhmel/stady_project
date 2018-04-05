@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bellintegrator.eas.employee.model.Employee;
+import ru.bellintegrator.eas.employee.model.view.EmployeeView;
 import ru.bellintegrator.eas.employee.service.EmployeeService;
 import ru.bellintegrator.eas.exception.DataAccessError;
 
@@ -18,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Хмель А.В.
- * class Controller for processing requests associated with the object the Employee and calling business logic
+ * class Controller for processing requests associated with the object the EmployeeView and calling business logic
  */
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
@@ -32,17 +32,17 @@ public class EmployeeController {
      * processes a request for getting list employees by filters officeId, firstName, lastName,
      * middleName, position, docCode, citizenshipCode,
      * and calls the corresponding method of business logic
-     * @param employee
-     * @return List<Employee>
+     * @param employeeView
+     * @return List<EmployeeView>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/list", method = {POST})
-    public List<Employee> filterEmployees(@RequestBody Employee employee) throws DataAccessError {
+    public List<EmployeeView> filterEmployees(@RequestBody EmployeeView employeeView) throws DataAccessError {
         LOG.info("getting list employees by filter");
 
-        List<Employee> employeeList = employeeService.filterEmployees(employee);
+        List<EmployeeView> employeeViewList = employeeService.filterEmployees(employeeView);
 
-        return employeeList;
+        return employeeViewList;
     }
 
     /**
@@ -66,32 +66,32 @@ public class EmployeeController {
 
     /**
      * processes a request for update the employee
-     * @param employee
+     * @param employeeView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/update", method = {POST})
-    public HttpStatus updateEmployee(@RequestBody Employee employee) throws DataAccessError {
-        LOG.info("update the employee: {}", employee);
+    public HttpStatus updateEmployee(@RequestBody EmployeeView employeeView) throws DataAccessError {
+        LOG.info("update the employee: {}", employeeView);
 
-        employeeService.updateEmployee(employee);
+        employeeService.updateEmployee(employeeView);
 
         return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the employee
-     * @param employee
+     * @param employeeView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/user/save", method = {POST})
-    public HttpStatus saveEmployee(@RequestBody Employee employee) throws DataAccessError {
-        LOG.info("save the employee: {}", employee);
+    public HttpStatus saveEmployee(@RequestBody EmployeeView employeeView) throws DataAccessError {
+        LOG.info("save the employee: {}", employeeView);
 
-        employeeService.saveEmployee(employee);
+        employeeService.saveEmployee(employeeView);
 
-        return HttpStatus.CREATED;
+        return HttpStatus.OK;
     }
 
     /**

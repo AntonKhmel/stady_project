@@ -2,7 +2,7 @@ var prefix = '/BellStady_war_exploded';
 // var prefix = '';
 
 var Registration = function() {
-    var authentication = {
+    var authenticationView = {
         login: 'Admin',
         password: '123456',
         name: 'Anton'
@@ -11,7 +11,7 @@ var Registration = function() {
         type: 'POST',
         url: prefix + '/api/registr',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(authentication),
+        data: JSON.stringify(authenticationView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -42,7 +42,7 @@ var SendActivationCode = function() {
 }
 
 var CheckAuthentication = function() {
-    var authentication = {
+    var authenticationView = {
         login: 'user',
         password: 'password'
     };
@@ -50,7 +50,7 @@ var CheckAuthentication = function() {
         type: 'POST',
         url: prefix + '/api/login',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(authentication),
+        data: JSON.stringify(authenticationView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -64,7 +64,7 @@ var CheckAuthentication = function() {
 }
 
 var FilterOrganizations = function() {
-    var organization = {
+    var organizationView = {
         name: 'Primer'
     };
     $.ajax({
@@ -72,7 +72,7 @@ var FilterOrganizations = function() {
         url: prefix + '/api/organization/list',
         contentType:"application/json; charset=utf-8",
         dataType: 'json',
-        data: JSON.stringify(organization),
+        data: JSON.stringify(organizationView),
         async: true,
         success: function(result) {
             var res = '';
@@ -123,41 +123,41 @@ var GetOrganizationById = function() {
 }
 
 var UpdateOrganization = function() {
-    var organization = {
+    var organizationView = {
         id: 2,
         name: 'newName',
         fullName: 'newFullName',
-        requisite: {
+        requisiteView: {
             id: 2,
             inn: '6464646464',
             cpp: '464646464'
         },
-        address: {
-            country: {
+        addressView: {
+            countryView: {
                 id: 1,
                 name: 'newCountry',
                 code: 4
             },
-            region: {
+            regionView: {
                 id: 1,
                 name: 'newRegion'
             },
-            city: {
+            cityView: {
                 id: 1,
                 name: 'newCity'
             },
-            street: {
+            streetView: {
                 id: 1,
                 name: 'newStreet'
             },
-            house: {
+            houseView: {
                 id: 1,
                 numberHouse: '21C',
                 numberFlat: 32,
                 numberOffice: '4A'
             }
         },
-        phone: {
+        phoneView: {
             id: 1,
             number: '89179179797'
         },
@@ -167,7 +167,7 @@ var UpdateOrganization = function() {
         type: 'POST',
         url: prefix + '/api/organization/update',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(organization),
+        data: JSON.stringify(organizationView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -181,34 +181,34 @@ var UpdateOrganization = function() {
 }
 
 var SaveOrganization = function() {
-    var organization = {
+    var organizationView = {
         name: 'Primer',
         fullName: 'newFullName',
-        requisite: {
+        requisiteView: {
             inn: '6464646464',
             cpp: '464646464'
         },
-        address: {
-            country: {
+        addressView: {
+            countryView: {
                 name: 'newCountry',
                 code: 4
             },
-            region: {
+            regionView: {
                 name: 'newRegion'
             },
-            city: {
+            cityView: {
                 name: 'newCity'
             },
-            street: {
+            streetView: {
                 name: 'newStreet'
             },
-            house: {
+            houseView: {
                 numberHouse: '21C',
                 numberFlat: 32,
                 numberOffice: '4A'
             }
         },
-        phone: {
+        phoneView: {
             number: '89172222222'
         },
         isActive: true
@@ -217,7 +217,7 @@ var SaveOrganization = function() {
         type: 'POST',
         url: prefix + '/api/organization/save',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(organization),
+        data: JSON.stringify(organizationView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -231,8 +231,8 @@ var SaveOrganization = function() {
 }
 
 var FilterOffices = function() {
-    var office = {
-        organization: {
+    var officeView = {
+        organizationView: {
             id: 1
         },
         name: 'Milex',
@@ -242,7 +242,7 @@ var FilterOffices = function() {
         type: 'POST',
         url: prefix + '/api/office/list',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(office),
+        data: JSON.stringify(officeView),
         async: true,
         success: function(result) {
             var res = '';
@@ -279,38 +279,38 @@ var DeleteOfficeById = function() {
 }
 
 var UpdateOffice = function() {
-    var office = {
+    var officeView = {
         id: 3,
         name: 'Milex',
-        address: {
-            country: {
+        addressView: {
+            countryView: {
                 id: 1,
                 name: 'newCountry',
                 code: 4
             },
-            region: {
+            regionView: {
                 id: 1,
                 name: 'newRegion'
             },
-            city: {
+            cityView: {
                 id: 1,
                 name: 'newCity'
             },
-            street: {
+            streetView: {
                 id: 1,
                 name: 'newStreet'
             },
-            house: {
+            houseView: {
                 id: 1,
                 numberHouse: '21C',
                 numberFlat: 32,
                 numberOffice: '4A'
             }
         },
-        organization: {
+        organizationView: {
             id: 1
         },
-        phone: {
+        phoneView: {
             id: 1,
             number: '89174444444'
         },
@@ -320,7 +320,7 @@ var UpdateOffice = function() {
         type: 'POST',
         url: prefix + '/api/office/update',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(office),
+        data: JSON.stringify(officeView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -334,29 +334,33 @@ var UpdateOffice = function() {
 }
 
 var SaveOffice = function() {
-    var office = {
-        name: 'newNameOffice',
-        address: {
-            country: {
+    var officeView = {
+        name: 'Milex',
+        addressView: {
+            countryView: {
                 name: 'newCountry',
                 code: 4
             },
-            region: {
+            regionView: {
                 name: 'newRegion'
             },
-            city: {
+            cityView: {
                 name: 'newCity'
             },
-            street: {
+            streetView: {
                 name: 'newStreet'
             },
-            house: {
+            houseView: {
                 numberHouse: '21C',
                 numberFlat: 32,
                 numberOffice: '4A'
             }
         },
-        phone: {
+        organizationView: {
+            name: 'newName',
+            fullName: 'newFullName'
+        },
+        phoneView: {
             number: '89174444444'
         },
         isActive: true
@@ -365,7 +369,7 @@ var SaveOffice = function() {
         type: 'POST',
         url: prefix + '/api/office/save',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(office),
+        data: JSON.stringify(officeView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -379,17 +383,17 @@ var SaveOffice = function() {
 }
 
 var FilterEmployees = function() {
-    var employee = {
+    var employeeView = {
         firstName: 'Ivan',
         secondName: '',
         middleName: '',
-        office: {id: 1}
+        officeView: {id: 1}
     };
     $.ajax({
         type: 'POST',
         url: prefix + '/api/user/list',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(employee),
+        data: JSON.stringify(employeeView),
         async: true,
         success: function(result) {
             var res = '';
@@ -428,29 +432,29 @@ var DeleteEmployeeById = function() {
 }
 
 var UpdateEmployee = function() {
-    var employee = {
+    var employeeView = {
         id: 1,
         firstName: 'Ivan',
         secondName: 'newSecondName',
         middleName: 'newMiddleName',
-        position: {
+        positionView: {
             id: 1,
             name: 'newPosition'
         },
-        docType: {
+        docTypeView: {
             id: 1,
             docCode: 4,
             docName: 'newDocName',
             docNumber: 17,
             docDate: '02.03.2018'
         },
-        citizenship: {
+        citizenshipView: {
             id: 1,
             name: 'newCitizenshipName',
             code: 654
         },
-        office: {id: 1},
-        phone: {
+        officeView: {id: 1},
+        phoneView: {
             id: 1,
             number: '89178888888'
         },
@@ -460,7 +464,7 @@ var UpdateEmployee = function() {
         type: 'POST',
         url: prefix + '/api/user/update',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(employee),
+        data: JSON.stringify(employeeView),
         async: true,
         success: function(result) {
             $('#result').text('Success');
@@ -474,24 +478,24 @@ var UpdateEmployee = function() {
 }
 
 var SaveEmployee = function() {
-    var employee = {
+    var employeeView = {
         firstName: 'newFirstName',
         secondName: 'newSecondName',
         middleName: 'newMiddleName',
-        position: {
+        positionView: {
             name: 'newPosition'
         },
-        docType: {
+        docTypeView: {
             docCode: 4,
             docName: 'newDocName',
             docNumber: 17,
             docDate: '02.03.2018'
         },
-        citizenship: {
+        citizenshipView: {
             name: 'newCitizenshipName',
             code: 654
         },
-        phone: {
+        phoneView: {
             number: '89178888888'
         },
         isIdentified: true
@@ -500,7 +504,7 @@ var SaveEmployee = function() {
         type: 'POST',
         url: prefix + '/api/user/save',
         contentType:"application/json; charset=utf-8",
-        data: JSON.stringify(employee),
+        data: JSON.stringify(employeeView),
         async: true,
         success: function(result) {
             $('#result').text('Success');

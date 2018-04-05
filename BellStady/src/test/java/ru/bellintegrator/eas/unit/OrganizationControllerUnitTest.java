@@ -14,11 +14,11 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.bellintegrator.eas.organization.controller.OrganizationController;
-import ru.bellintegrator.eas.organization.model.Organization;
-import ru.bellintegrator.eas.organization.model.address.Address;
-import ru.bellintegrator.eas.organization.model.address.dependent.*;
-import ru.bellintegrator.eas.organization.model.phone.Phone;
-import ru.bellintegrator.eas.organization.model.requisite.Requisite;
+import ru.bellintegrator.eas.organization.model.view.OrganizationView;
+import ru.bellintegrator.eas.organization.model.view.address.AddressView;
+import ru.bellintegrator.eas.organization.model.view.address.dependent.*;
+import ru.bellintegrator.eas.organization.model.view.phone.PhoneView;
+import ru.bellintegrator.eas.organization.model.view.requisite.RequisiteView;
 import ru.bellintegrator.eas.organization.service.OrganizationService;
 
 import java.util.Arrays;
@@ -53,44 +53,45 @@ public class OrganizationControllerUnitTest {
 
     @Test
     public void filterOrganizations() throws Exception {
-        List<Organization> organizationList = Arrays.asList(new Organization(1, "Abradoks", "",
-                new Requisite(), new Address(), new Phone(), true));
-        Organization organization = new Organization(0, "Abradoks", "", new Requisite(),
-                new Address(), new Phone(), true);
+        List<OrganizationView> organizationViewList = Arrays.asList(new OrganizationView(1, "Abradoks", "",
+                new RequisiteView(), new AddressView(), new PhoneView(), true));
+        OrganizationView organizationView = new OrganizationView(0, "Abradoks", "", new RequisiteView(),
+                new AddressView(), new PhoneView(), true);
 
-        when(organizationService.filterOrganizations(organization)).thenReturn(organizationList);
+        when(organizationService.filterOrganizations(organizationView)).thenReturn(organizationViewList);
 
         mockMvc.perform(post("/api/organization/list")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(asJsonString(organization)))
+                .content(asJsonString(organizationView)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is("Abradoks")))
                 .andExpect(jsonPath("$[0].isActive", is(true)));
 
-        verify(organizationService, times(1)).filterOrganizations(organization);
+        verify(organizationService, times(1)).filterOrganizations(organizationView);
         verifyNoMoreInteractions(organizationService);
     }
 
     @Test
     public void getOrganizationById() throws Exception {
-        Requisite requisite = new Requisite(0, "7203253271", "720301001");
-        Country cauntry = new Country(0, "Russia", 0);
-        Region region = new Region(0, "Voronezhskaya oblast");
-        City city = new City(0, "Voronezh");
-        Street street = new Street(0, "Zagorodnaya");
-        House house = new House(0, "124/7M", 7, "24");
-        Address address = new Address(0, cauntry, region, city, street, house);
-        Phone phone = new Phone(0, "8(222)333-33-33");
-        Organization organization = new Organization(0, "Milena", "OBSHHESTVO S OGRANICHENNOJ OTVETSTVENNOSTYU MILENA",
-                requisite, address, phone,true);
+        RequisiteView requisiteView = new RequisiteView(0, "7203253271", "720301001");
+        CountryView cauntryView = new CountryView(0, "Russia", 0);
+        RegionView regionView = new RegionView(0, "Voronezhskaya oblast");
+        CityView cityView = new CityView(0, "Voronezh");
+        StreetView streetView = new StreetView(0, "Zagorodnaya");
+        HouseView houseView = new HouseView(0, "124/7M", 7, "24");
+        AddressView addressView = new AddressView(0, cauntryView, regionView, cityView, streetView, houseView);
+        PhoneView phoneView = new PhoneView(0, "8(222)333-33-33");
+        OrganizationView organizationView = new OrganizationView(3, "Milena", "OBSHHESTVO S OGRANICHENNOJ OTVETSTVENNOSTYU MILENA",
+                requisiteView, addressView, phoneView,true);
 
-        when(organizationService.getOrganizationById(3)).thenReturn(organization);
+        when(organizationService.getOrganizationById(3)).thenReturn(organizationView);
 
         mockMvc.perform(get("/api/organization/{id}", 3))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.id", is(3)))
                 .andExpect(jsonPath("$.name", is("Milena")))
                 .andExpect(jsonPath("$.fullName", is("OBSHHESTVO S OGRANICHENNOJ OTVETSTVENNOSTYU MILENA")));
 
@@ -100,51 +101,51 @@ public class OrganizationControllerUnitTest {
 
     @Test
     public void updateOrganization() throws Exception {
-        Requisite requisite = new Requisite(0, "6464646464", "464646464");
-        Country cauntry = new Country(0, "newCountry", 0);
-        Region region = new Region(0, "newRegion");
-        City city = new City(0, "newCity");
-        Street street = new Street(0, "newStreet");
-        House house = new House(0, "17A", 32, "4M");
-        Address address = new Address(0, cauntry, region, city, street, house);
-        Phone phone = new Phone(0, "89172222222");
-        Organization organization = new Organization(3, "newName", "newFullName",
-                requisite, address, phone, true);
+        RequisiteView requisiteView = new RequisiteView(0, "6464646464", "464646464");
+        CountryView cauntryView = new CountryView(0, "newCountry", 0);
+        RegionView regionView = new RegionView(0, "newRegion");
+        CityView cityView = new CityView(0, "newCity");
+        StreetView streetView = new StreetView(0, "newStreet");
+        HouseView houseView = new HouseView(0, "17A", 32, "4M");
+        AddressView addressView = new AddressView(0, cauntryView, regionView, cityView, streetView, houseView);
+        PhoneView phoneView = new PhoneView(0, "89172222222");
+        OrganizationView organizationView = new OrganizationView(3, "newName", "newFullName",
+                requisiteView, addressView, phoneView, true);
 
-        doNothing().when(organizationService).updateOrganization(organization);
+        doNothing().when(organizationService).updateOrganization(organizationView);
 
         mockMvc.perform(
                 post("/api/organization/update")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(organization)))
+                        .content(asJsonString(organizationView)))
                 .andExpect(status().isOk());
 
-        verify(organizationService, times(1)).updateOrganization(organization);
+        verify(organizationService, times(1)).updateOrganization(organizationView);
         verifyNoMoreInteractions(organizationService);
     }
 
     @Test
     public void saveOrganization() throws Exception {
-        Requisite requisite = new Requisite(0, "6464646464", "464646464");
-        Country cauntry = new Country(0, "newCountry", 0);
-        Region region = new Region(0, "newRegion");
-        City city = new City(0, "newCity");
-        Street street = new Street(0, "newStreet");
-        House house = new House(0, "18B", 32, "25T");
-        Address address = new Address(0, cauntry, region, city, street, house);
-        Phone phone = new Phone(0, "89173333333");
-        Organization organization = new Organization(0, "OOO Test", "OBSHHESTVO S OGRANICHENNOJ OTVETSTVENNOSTYU PRIMER",
-                requisite, address, phone, true);
+        RequisiteView requisiteView = new RequisiteView(0, "6464646464", "464646464");
+        CountryView cauntryView = new CountryView(0, "newCountry", 0);
+        RegionView regionView = new RegionView(0, "newRegion");
+        CityView cityView = new CityView(0, "newCity");
+        StreetView streetView = new StreetView(0, "newStreet");
+        HouseView houseView = new HouseView(0, "18B", 32, "25T");
+        AddressView addressView = new AddressView(0, cauntryView, regionView, cityView, streetView, houseView);
+        PhoneView phoneView = new PhoneView(0, "89173333333");
+        OrganizationView organizationView = new OrganizationView(0, "OOO Test", "OBSHHESTVO S OGRANICHENNOJ OTVETSTVENNOSTYU PRIMER",
+                requisiteView, addressView, phoneView, true);
 
-        doNothing().when(organizationService).saveOrganization(organization);
+        doNothing().when(organizationService).saveOrganization(organizationView);
 
         mockMvc.perform(
                 post("/api/organization/save")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(organization)))
-                .andExpect(status().isCreated());
+                        .content(asJsonString(organizationView)))
+                .andExpect(status().isOk());
 
-        verify(organizationService, times(1)).saveOrganization(organization);
+        verify(organizationService, times(1)).saveOrganization(organizationView);
         verifyNoMoreInteractions(organizationService);
     }
 

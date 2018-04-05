@@ -1,8 +1,8 @@
 package ru.bellintegrator.eas.catalog.service;
 
-import ru.bellintegrator.eas.employee.model.dependent.DocType;
+import ru.bellintegrator.eas.employee.model.view.dependent.DocTypeView;
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.organization.model.address.dependent.Country;
+import ru.bellintegrator.eas.organization.model.view.address.dependent.CountryView;
 
 import java.util.List;
 
@@ -11,14 +11,14 @@ import java.util.List;
  */
 public interface CatalogService {
     /**
-     * @return List<Document>
+     * @return List<DocTypeView>
      * @throws DataAccessError If an exception access data
      */
-    List<DocType> allDocs() throws DataAccessError;
+    List<DocTypeView> allDocs() throws DataAccessError;
 
     /**
-     * @return List<Country>
+     * @return List<CountryView>
      * @throws DataAccessError If an exception access data
      */
-    List<Country> allCountries() throws DataAccessError;
+    List<CountryView> allCountries() throws DataAccessError;
 }

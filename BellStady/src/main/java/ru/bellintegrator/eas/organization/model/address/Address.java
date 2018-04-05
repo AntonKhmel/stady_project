@@ -147,7 +147,7 @@ public class Address {
         builder.append("address:");
         builder.append("{");
         if (country != null) {
-            builder.append(country.shortToString());
+            builder.append(country);
         }
         if (region != null) {
             builder.append(region);

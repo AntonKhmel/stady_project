@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.office.model.Office;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
 import ru.bellintegrator.eas.office.service.OfficeService;
 
 import java.util.List;
@@ -18,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Хмель А.В.
- * class Controller for processing requests associated with the object the Office and calling business logic
+ * class Controller for processing requests associated with the object the OfficeView and calling business logic
  */
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
@@ -32,17 +32,17 @@ public class OfficeController {
      * processes a request for getting list offices by filters officeId, firstName, lastName,
      * middleName,
      * and calls the corresponding method of business logic
-     * @param office
-     * @return List<Office>
+     * @param officeView
+     * @return List<OfficeView>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/list", method = {POST})
-    public List<Office> filterOffices(@RequestBody Office office) throws DataAccessError {
+    public List<OfficeView> filterOffices(@RequestBody OfficeView officeView) throws DataAccessError {
         LOG.info("getting list offices by filter");
 
-        List<Office> officeList = officeService.filterOffices(office);
+        List<OfficeView> officeViewList = officeService.filterOffices(officeView);
 
-        return officeList;
+        return officeViewList;
     }
 
     /**
@@ -66,32 +66,32 @@ public class OfficeController {
 
     /**
      * processes a request for update the Office
-     * @param office
+     * @param officeView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/update", method = {POST})
-    public HttpStatus updateOffice(@RequestBody Office office) throws DataAccessError {
-        LOG.info("update the office: {}", office);
+    public HttpStatus updateOffice(@RequestBody OfficeView officeView) throws DataAccessError {
+        LOG.info("update the office: {}", officeView);
 
-        officeService.updateOffice(office);
+        officeService.updateOffice(officeView);
 
         return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the Office
-     * @param office
+     * @param officeView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/office/save", method = {POST})
-    public HttpStatus saveOffice(@RequestBody Office office) throws DataAccessError {
-        LOG.info("save the office: {}", office);
+    public HttpStatus saveOffice(@RequestBody OfficeView officeView) throws DataAccessError {
+        LOG.info("save the office: {}", officeView);
 
-        officeService.saveOffice(office);
+        officeService.saveOffice(officeView);
 
-        return HttpStatus.CREATED;
+        return HttpStatus.OK;
     }
 
     /**

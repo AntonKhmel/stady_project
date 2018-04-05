@@ -1,7 +1,8 @@
 package ru.bellintegrator.eas.authentication.dao;
 
-import ru.bellintegrator.eas.authentication.model.Activation;
 import ru.bellintegrator.eas.authentication.model.Authentication;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.exception.DataAccessError;
 
 /**
@@ -18,12 +19,12 @@ public interface AuthenticationDAO {
      * @return Activation
      * @throws DataAccessError If an exception access data
      */
-    Activation sendActivationCode() throws DataAccessError;
+    ActivationView sendActivationCode() throws DataAccessError;
 
     /**
-     * @param authentication
+     * @param authenticationView
      * @return boolean
      * @throws DataAccessError If an exception access data
      */
-    boolean checkAuthentication(Authentication authentication) throws DataAccessError;
+    boolean checkAuthentication(AuthenticationView authenticationView) throws DataAccessError;
 }

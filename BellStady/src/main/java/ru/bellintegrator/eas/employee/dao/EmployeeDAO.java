@@ -1,6 +1,7 @@
 package ru.bellintegrator.eas.employee.dao;
 
 import ru.bellintegrator.eas.employee.model.Employee;
+import ru.bellintegrator.eas.employee.model.view.EmployeeView;
 import ru.bellintegrator.eas.exception.DataAccessError;
 
 import java.util.List;
@@ -10,11 +11,11 @@ import java.util.List;
  */
 public interface EmployeeDAO {
     /**
-     * @param employee
+     * @param employeeView
      * @return List<Employee>
      * @throws DataAccessError If an exception access data
      */
-    List<Employee> filterEmployees(Employee employee) throws DataAccessError;
+    List<Employee> filterEmployees(EmployeeView employeeView) throws DataAccessError;
 
     /**
      * @return Employee
@@ -23,10 +24,10 @@ public interface EmployeeDAO {
     boolean deleteEmployeeById(int id) throws DataAccessError;
 
     /**
-     * @param employee
+     * @param employeeView
      * @throws DataAccessError If an exception access data
      */
-    void updateEmployee(Employee employee) throws DataAccessError;
+    void updateEmployee(EmployeeView employeeView) throws DataAccessError;
 
     /**
      * @param employee

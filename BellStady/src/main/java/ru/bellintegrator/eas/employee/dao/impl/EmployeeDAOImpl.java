@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.bellintegrator.eas.employee.dao.EmployeeDAO;
 import ru.bellintegrator.eas.employee.model.Employee;
+import ru.bellintegrator.eas.employee.model.view.EmployeeView;
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.office.model.Office;
 
@@ -31,31 +32,32 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     // get a list of employees by filters officeId, firstName, secondName, middleName, position, docCode, citizenshipCode
     @Override
-    public List<Employee> filterEmployees(Employee employee) throws DataAccessError {
+    public List<Employee> filterEmployees(EmployeeView employeeView) throws DataAccessError {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Employee> criteria = builder.createQuery(Employee.class);
 
             Root<Employee> root = criteria.from(Employee.class);
             criteria.where(builder.equal(root.get("firstName"), "Ivan"));
-            if (employee != null) {
-                if (employee.getOffice() != null && employee.getOffice().getId() != 0) {
-                    criteria.where(builder.equal(root.get("office").get("id"), employee.getOffice().getId()));
-                    if (employee.getFirstName() != null && !employee.getFirstName().isEmpty()) {
-                        criteria.where(builder.equal(root.get("firstName"), employee.getFirstName()));
-                        if (employee.getSecondName() != null && !employee.getSecondName().isEmpty()) {
-                            criteria.where(builder.equal(root.get("secondName"), employee.getSecondName()));
-                            if (employee.getMiddleName() != null && !employee.getMiddleName().isEmpty()) {
-                                criteria.where(builder.equal(root.get("middleName"), employee.getMiddleName()));
-                                if (employee.getPosition() != null && !employee.getPosition().getName().isEmpty()) {
+            if (employeeView != null) {
+                if (employeeView.getOfficeView() != null && employeeView.getOfficeView().getId() != 0) {
+                    criteria.where(builder.equal(root.get("office").get("id"), employeeView.getOfficeView().getId()));
+                    if (employeeView.getFirstName() != null && !employeeView.getFirstName().isEmpty()) {
+                        criteria.where(builder.equal(root.get("firstName"), employeeView.getFirstName()));
+                        if (employeeView.getSecondName() != null && !employeeView.getSecondName().isEmpty()) {
+                            criteria.where(builder.equal(root.get("secondName"), employeeView.getSecondName()));
+                            if (employeeView.getMiddleName() != null && !employeeView.getMiddleName().isEmpty()) {
+                                criteria.where(builder.equal(root.get("middleName"), employeeView.getMiddleName()));
+                                if (employeeView.getPositionView() != null && !employeeView.getPositionView().getName()
+                                        .isEmpty()) {
                                     criteria.where(builder.equal(root.get("position").get("name"),
-                                            employee.getPosition().getName()));
-                                    if (employee.getDocType().getDocCode() != 0) {
+                                            employeeView.getPositionView().getName()));
+                                    if (employeeView.getDocTypeView().getDocCode() != 0) {
                                         criteria.where(builder.equal(root.get("docType").get("docCode"),
-                                                employee.getDocType().getDocCode()));
-                                        if (employee.getCitizenship().getCode() != 0) {
+                                                employeeView.getDocTypeView().getDocCode()));
+                                        if (employeeView.getCitizenshipView().getCode() != 0) {
                                             criteria.where(builder.equal(root.get("citizenship").get("code"),
-                                                    employee.getCitizenship().getCode()));
+                                                    employeeView.getCitizenshipView().getCode()));
                                         }
                                     }
                                 }
@@ -98,22 +100,21 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 
     // update the employee
     @Override
-    public void updateEmployee(Employee employee) throws DataAccessError {
+    public void updateEmployee(EmployeeView employeeView) throws DataAccessError {
         try {
-            Employee getEmployee = entityManager.find(Employee.class, employee.getId());
-            getEmployee.setFirstName(employee.getFirstName());
-            getEmployee.setSecondName(employee.getSecondName());
-            getEmployee.setMiddleName(employee.getMiddleName());
-            getEmployee.getPosition().setName(employee.getPosition().getName());
-            getEmployee.getPhone().setNumber(employee.getPhone().getNumber());
-            getEmployee.getDocType().setDocCode(employee.getDocType().getDocCode());
-            getEmployee.getDocType().setDocName(employee.getDocType().getDocName());
-            getEmployee.getDocType().setDocNumber(employee.getDocType().getDocNumber());
-            getEmployee.getDocType().setDocDate(employee.getDocType().getDocDate());
-            getEmployee.getCitizenship().setName(employee.getCitizenship().getName());
-            getEmployee.getCitizenship().setCode(employee.getCitizenship().getCode());
-            getEmployee.setIsIdentified(employee.getIsIdentified());
-            entityManager.merge(getEmployee);
+            Employee employee = entityManager.find(Employee.class, employeeView.getId());
+            employee.setFirstName(employeeView.getFirstName());
+            employee.setSecondName(employeeView.getSecondName());
+            employee.setMiddleName(employeeView.getMiddleName());
+            employee.getPosition().setName(employeeView.getPositionView().getName());
+            employee.getPhone().setNumber(employeeView.getPhoneView().getNumber());
+            employee.getDocType().setDocName(employeeView.getDocTypeView().getDocName());
+            employee.getDocType().setDocNumber(employeeView.getDocTypeView().getDocNumber());
+            employee.getDocType().setDocDate(employeeView.getDocTypeView().getDocDate());
+            employee.getCitizenship().setName(employeeView.getCitizenshipView().getName());
+            employee.getCitizenship().setCode(employeeView.getCitizenshipView().getCode());
+            employee.setIsIdentified(employeeView.getIsIdentified());
+            entityManager.merge(employee);
 
             LOG.info("update the employee");
         } catch (Exception ex) {

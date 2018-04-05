@@ -75,7 +75,6 @@ public class Position {
     /**
      * @return the string representation of the object Position
      */
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

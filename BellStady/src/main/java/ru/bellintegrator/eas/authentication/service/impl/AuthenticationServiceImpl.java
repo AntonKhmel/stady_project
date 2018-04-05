@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.bellintegrator.eas.authentication.dao.AuthenticationDAO;
-import ru.bellintegrator.eas.authentication.model.Activation;
 import ru.bellintegrator.eas.authentication.model.Authentication;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.authentication.service.AuthenticationService;
 import ru.bellintegrator.eas.exception.DataAccessError;
 
 /**
  * @author Хмель А.В.
- * class Service for object authentication by work with business logic
+ * class Service for object the AuthenticationView by work with business logic
  */
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -25,7 +26,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     //calls the DAO object method for registration
     @Override
     @Transactional()
-    public void registration(Authentication authentication) throws DataAccessError {
+    public void registration(AuthenticationView authenticationView) throws DataAccessError {
+        Authentication authentication = new Authentication();
+        authentication.setLogin(authenticationView.getLogin());
+        authentication.setPassword(authenticationView.getPassword());
+        authentication.setName(authenticationView.getName());
         authenticationDAO.registration(authentication);
 
         LOG.info("call method DAO for save data new registration");
@@ -33,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     // calls the DAO object method for send activation code
     @Override
-    public Activation sendActivationCode() throws DataAccessError {
+    public ActivationView sendActivationCode() throws DataAccessError {
         LOG.info("call method DAO for send activation code");
 
         return authenticationDAO.sendActivationCode();
@@ -42,9 +47,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     // calls the DAO object method for check authentication
     @Override
     @Transactional(readOnly = true)
-    public boolean checkAuthentication(Authentication authentication) throws DataAccessError {
+    public boolean checkAuthentication(AuthenticationView authenticationView) throws DataAccessError {
         LOG.info("call method DAO for check authentication");
 
-        return authenticationDAO.checkAuthentication(authentication);
+        return authenticationDAO.checkAuthentication(authenticationView);
     }
 }

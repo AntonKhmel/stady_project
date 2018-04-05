@@ -1,4 +1,4 @@
-package ru.bellintegrator.eas.authentication.model;
+package ru.bellintegrator.eas.authentication.model.view;
 
 import java.util.UUID;
 
@@ -6,10 +6,13 @@ import java.util.UUID;
  * @author Хмель А.В.
  * class Activation
  */
-public class Activation {
+public class ActivationView {
     private final String value;
 
-    public Activation() {
+    /**
+     * constructor for jackson
+     */
+    public ActivationView() {
         this.value = UUID.randomUUID().toString();
     }
 
@@ -19,13 +22,13 @@ public class Activation {
         return value;
     }
 
-    // equals and hashCode
+// equals and hashCode
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Activation activation = (Activation) o;
+        ActivationView activation = (ActivationView) o;
         if (value != null ? !value.equals(this.value) : this.value != null) return false;
 
         return true;
@@ -39,12 +42,12 @@ public class Activation {
     }
 
     /**
-     * @return the string representation of the object Activation
+     * @return the string representation of the object ActivationView
      */
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Authentication:");
+        builder.append("ActivationView:");
         builder.append("{value: ");
         builder.append(getValue());
         builder.append("}");

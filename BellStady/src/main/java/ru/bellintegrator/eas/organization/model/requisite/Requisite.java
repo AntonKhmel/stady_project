@@ -62,7 +62,8 @@ public class Requisite {
     public void setCpp(String cpp) {
         this.cpp = cpp;
     }
-// equals and hashCode
+
+    // equals and hashCode
 
     @Override
     public boolean equals(Object o) {

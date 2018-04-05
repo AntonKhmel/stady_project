@@ -14,12 +14,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.bellintegrator.eas.employee.controller.EmployeeController;
-import ru.bellintegrator.eas.employee.model.Employee;
-import ru.bellintegrator.eas.employee.model.dependent.Citizenship;
-import ru.bellintegrator.eas.employee.model.dependent.DocType;
-import ru.bellintegrator.eas.employee.model.dependent.Position;
+import ru.bellintegrator.eas.employee.model.view.EmployeeView;
+import ru.bellintegrator.eas.employee.model.view.dependent.CitizenshipView;
+import ru.bellintegrator.eas.employee.model.view.dependent.DocTypeView;
+import ru.bellintegrator.eas.employee.model.view.dependent.PositionView;
 import ru.bellintegrator.eas.employee.service.EmployeeService;
-import ru.bellintegrator.eas.organization.model.phone.Phone;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
+import ru.bellintegrator.eas.organization.model.view.phone.PhoneView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,24 +54,24 @@ public class EmployeeControllerUnitTest {
 
     @Test
     public void filterEmployees() throws Exception {
-        Position position = new Position(0, "programmer");
-        List<Employee> employeeList = Arrays.asList(new Employee(0, "Ivan", "Ivanov",
-                "Ivanovich", position, new DocType(), new Citizenship(), new Phone(), true));
-        Employee employee = new Employee(0, "Ivan", "", "", new Position(),
-                new DocType(), new Citizenship(), new Phone(), true);
+        PositionView positionView = new PositionView(0, "programmer");
+        List<EmployeeView> employeeViewList = Arrays.asList(new EmployeeView(0, "Ivan", "Ivanov",
+                "Ivanovich", positionView, new DocTypeView(), new CitizenshipView(), new PhoneView(), new OfficeView(), true));
+        EmployeeView employeeView = new EmployeeView(0, "Ivan", "", "", new PositionView(),
+                new DocTypeView(), new CitizenshipView(), new PhoneView(), new OfficeView(), true);
 
-        when(employeeService.filterEmployees(employee)).thenReturn(employeeList);
+        when(employeeService.filterEmployees(employeeView)).thenReturn(employeeViewList);
 
         mockMvc.perform(post("/api/user/list")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(asJsonString(employee)))
+                .content(asJsonString(employeeView)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName", is("Ivan")))
                 .andExpect(jsonPath("$[0].secondName", is("Ivanov")))
                 .andExpect(jsonPath("$[0].middleName", is("Ivanovich")));
 
-        verify(employeeService, times(1)).filterEmployees(employee);
+        verify(employeeService, times(1)).filterEmployees(employeeView);
         verifyNoMoreInteractions(employeeService);
     }
 
@@ -90,43 +91,43 @@ public class EmployeeControllerUnitTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        Position position = new Position(0, "newPosition");
-        DocType docType = new DocType(0, 432, "newDocName", 21, "02.03.2018");
-        Citizenship citizenship = new Citizenship(0, "newCitizenshipName", 232);
-        Phone phone = new Phone(0, "89179999999");
-        Employee employee = new Employee(1, "newFirstName", "newSecondName",
-                "newMiddleName", position, docType, citizenship, phone,true);
+        PositionView positionView = new PositionView(0, "newPosition");
+        DocTypeView docTypeView = new DocTypeView(0, 432, "newDocName", 21, "02.03.2018");
+        CitizenshipView citizenshipView = new CitizenshipView(0, "newCitizenshipName", 232);
+        PhoneView phoneView = new PhoneView(0, "89179999999");
+        EmployeeView employeeView = new EmployeeView(1, "newFirstName", "newSecondName",
+                "newMiddleName", positionView, docTypeView, citizenshipView, phoneView, new OfficeView(), true);
 
-        doNothing().when(employeeService).updateEmployee(employee);
+        doNothing().when(employeeService).updateEmployee(employeeView);
 
         mockMvc.perform(
                 post("/api/user/update")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(employee)))
+                        .content(asJsonString(employeeView)))
                 .andExpect(status().isOk());
 
-        verify(employeeService, times(1)).updateEmployee(employee);
+        verify(employeeService, times(1)).updateEmployee(employeeView);
         verifyNoMoreInteractions(employeeService);
     }
 
     @Test
     public void saveEmployee() throws Exception {
-        Position position = new Position(0, "newPosition");
-        DocType docType = new DocType(0, 432, "newDocName", 21, "02.03.2018");
-        Citizenship citizenship = new Citizenship(0, "newCitizenshipName", 232);
-        Phone phone = new Phone(0, "89179999999");
-        Employee employee = new Employee(0, "newFirstName", "newSecondName",
-                "newMiddleName", position, docType, citizenship, phone,true);
+        PositionView positionView = new PositionView(0, "newPosition");
+        DocTypeView docTypeView = new DocTypeView(0, 432, "newDocName", 21, "02.03.2018");
+        CitizenshipView citizenshipView = new CitizenshipView(0, "newCitizenshipName", 232);
+        PhoneView phoneView = new PhoneView(0, "89179999999");
+        EmployeeView employeeView = new EmployeeView(0, "newFirstName", "newSecondName",
+                "newMiddleName", positionView, docTypeView, citizenshipView, phoneView, new OfficeView(), true);
 
-        doNothing().when(employeeService).saveEmployee(employee);
+        doNothing().when(employeeService).saveEmployee(employeeView);
 
         mockMvc.perform(
                 post("/api/user/save")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(employee)))
-                .andExpect(status().isCreated());
+                        .content(asJsonString(employeeView)))
+                .andExpect(status().isOk());
 
-        verify(employeeService, times(1)).saveEmployee(employee);
+        verify(employeeService, times(1)).saveEmployee(employeeView);
         verifyNoMoreInteractions(employeeService);
     }
 

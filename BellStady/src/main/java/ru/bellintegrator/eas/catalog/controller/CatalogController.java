@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bellintegrator.eas.catalog.service.CatalogService;
-import ru.bellintegrator.eas.employee.model.dependent.DocType;
+import ru.bellintegrator.eas.employee.model.view.dependent.DocTypeView;
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.organization.model.address.dependent.Country;
+import ru.bellintegrator.eas.organization.model.view.address.dependent.CountryView;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Хмель А.В.
- * class Controller for processing requests associated with the objects Document and Country and calling business logic
+ * class Controller for processing requests associated with the objects DocumentView and CountryView and calling business logic
  */
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
@@ -30,30 +30,30 @@ public class CatalogController {
 
     /**
      * processes a request for get all docs
-     * @return List<DocType>
+     * @return List<DocTypeView>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/docs", method = {POST})
-    public List<DocType> allDocs() throws DataAccessError {
+    public List<DocTypeView> allDocs() throws DataAccessError {
         LOG.info("getting all docs");
 
-        List<DocType> documentList = catalogService.allDocs();
+        List<DocTypeView> docTypeViewList = catalogService.allDocs();
 
-        return documentList;
+        return docTypeViewList;
     }
 
     /**
      * processes a request for get all countries
-     * @return List<Country>
+     * @return List<CountryView>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/countries", method = {POST})
-    public List<Country> allCountries() throws DataAccessError {
+    public List<CountryView> allCountries() throws DataAccessError {
         LOG.info("getting all countries");
 
-        List<Country> countryList = catalogService.allCountries();
+        List<CountryView> countryViewList = catalogService.allCountries();
 
-        return countryList;
+        return countryViewList;
     }
 
     /**

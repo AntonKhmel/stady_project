@@ -26,7 +26,7 @@
     <!-- initialize Embedded DataSource. Встроенная база данных-->
     <jdbc:initialize-database data-source="dataSource" ignore-failures="DROPS">
         <jdbc:script location="classpath:schema.sql"/>
-        <jdbc:script location="classpath:data.sql"/>
+        <!--<jdbc:script location="classpath:data.sql"/>-->
     </jdbc:initialize-database>
 
     <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />

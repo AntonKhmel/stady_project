@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.office.dao.OfficeDAO;
 import ru.bellintegrator.eas.office.model.Office;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -30,21 +31,22 @@ public class OfficeDAOImpl implements OfficeDAO {
 
     // get a list of offices by filters orgId, name, phone, isActive
     @Override
-    public List<Office> filterOffices(Office office) throws DataAccessError {
+    public List<Office> filterOffices(OfficeView officeView) throws DataAccessError {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Office> criteria = builder.createQuery(Office.class);
 
             Root<Office> root = criteria.from(Office.class);
-            if (office != null) {
-                if (office.getOrganization().getId() != 0) {
-                    criteria.where(builder.equal(root.get("organization").get("id"), office.getOrganization().getId()));
-                    if (office.getName() != null && !office.getName().isEmpty()) {
-                        criteria.where(builder.equal(root.get("name"), office.getName()));
-                        if (office.getPhone() != null && office.getPhone().getNumber() != null && !office.getPhone().getNumber().isEmpty()) {
-                            criteria.where(builder.equal(root.get("phone").get("number"), office.getPhone().getNumber()));
-                            if (office.getIsActive()) {
-                                criteria.where(builder.equal(root.get("isActive"), office.getIsActive()));
+            if (officeView != null) {
+                if (officeView.getOrganizationView().getId() != 0) {
+                    criteria.where(builder.equal(root.get("organization").get("id"), officeView.getOrganizationView().getId()));
+                    if (officeView.getName() != null && !officeView.getName().isEmpty()) {
+                        criteria.where(builder.equal(root.get("name"), officeView.getName()));
+                        if (officeView.getPhoneView() != null && officeView.getPhoneView().getNumber() != null && !officeView
+                                .getPhoneView().getNumber().isEmpty()) {
+                            criteria.where(builder.equal(root.get("phone").get("number"), officeView.getPhoneView().getNumber()));
+                            if (officeView.getIsActive()) {
+                                criteria.where(builder.equal(root.get("isActive"), officeView.getIsActive()));
                             }
                         }
                     }
@@ -84,21 +86,20 @@ public class OfficeDAOImpl implements OfficeDAO {
 
      // update the office
     @Override
-    public void updateOffice(Office office) throws DataAccessError {
+    public void updateOffice(OfficeView officeView) throws DataAccessError {
         try {
-            Office getOffice = entityManager.find(Office.class, office.getId());
-            getOffice.setName(office.getName());
-            getOffice.getAddress().getCountry().setName(office.getAddress().getCountry().getName());
-            getOffice.getAddress().getCountry().setCode(office.getAddress().getCountry().getCode());
-            getOffice.getAddress().getRegion().setName(office.getAddress().getRegion().getName());
-            getOffice.getAddress().getCity().setName(office.getAddress().getCity().getName());
-            getOffice.getAddress().getStreet().setName(office.getAddress().getStreet().getName());
-            getOffice.getAddress().getHouse().setNumberHouse(office.getAddress().getHouse().getNumberHouse());
-            getOffice.getAddress().getHouse().setNumberFlat(office.getAddress().getHouse().getNumberFlat());
-            getOffice.getAddress().getHouse().setNumberOffice(office.getAddress().getHouse().getNumberOffice());
-            getOffice.getPhone().setNumber(office.getPhone().getNumber());
-            getOffice.setIsActive(office.getIsActive());
-            entityManager.merge(getOffice);
+            Office office = entityManager.find(Office.class, officeView.getId());
+            office.setName(officeView.getName());
+            office.getAddress().getCountry().setName(officeView.getAddressView().getCountryView().getName());
+            office.getAddress().getRegion().setName(officeView.getAddressView().getRegionView().getName());
+            office.getAddress().getCity().setName(officeView.getAddressView().getCityView().getName());
+            office.getAddress().getStreet().setName(officeView.getAddressView().getStreetView().getName());
+            office.getAddress().getHouse().setNumberHouse(officeView.getAddressView().getHouseView().getNumberHouse());
+            office.getAddress().getHouse().setNumberFlat(officeView.getAddressView().getHouseView().getNumberFlat());
+            office.getAddress().getHouse().setNumberOffice(officeView.getAddressView().getHouseView().getNumberOffice());
+            office.getPhone().setNumber(officeView.getPhoneView().getNumber());
+            office.setIsActive(officeView.getIsActive());
+            entityManager.merge(office);
 
             LOG.info("update the office");
         } catch (Exception ex) {

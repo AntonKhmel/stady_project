@@ -1,8 +1,9 @@
 package ru.bellintegrator.eas.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
@@ -10,11 +11,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import ru.bellintegrator.eas.employee.model.Employee;
-import ru.bellintegrator.eas.employee.model.dependent.Citizenship;
-import ru.bellintegrator.eas.employee.model.dependent.DocType;
-import ru.bellintegrator.eas.employee.model.dependent.Position;
-import ru.bellintegrator.eas.organization.model.phone.Phone;
+import ru.bellintegrator.eas.employee.model.view.EmployeeView;
+import ru.bellintegrator.eas.employee.model.view.dependent.CitizenshipView;
+import ru.bellintegrator.eas.employee.model.view.dependent.DocTypeView;
+import ru.bellintegrator.eas.employee.model.view.dependent.PositionView;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
+import ru.bellintegrator.eas.organization.model.view.phone.PhoneView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,33 +29,56 @@ import static org.junit.Assert.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:dispatcher-servlet.xml", "classpath:applicationContext.xml"})
 public class EmployeeControllerIntegrationTest {
+    private final Logger LOG = LoggerFactory.getLogger(EmployeeControllerIntegrationTest.class);
+
     private static final String BASE_URI = "http://localhost:7030/BellStady_war_exploded/api";
     private static final int UNKNOWN_ID = Integer.MAX_VALUE;
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Before
+    public void addEmployees() {
+        EmployeeView employeeView1 = new EmployeeView(0, "Ivan", "Ivanov",
+                "Ivanovich", new PositionView(0, "Ingener"), new DocTypeView(0, 432, "Nakladnaya",
+                21, "02.03.2018"), null, null, null, true);
+        EmployeeView employeeView2 = new EmployeeView(0, "Ivan", "Ivanov",
+                "Ivanovich", new PositionView(0, "Pekar"), new DocTypeView(0, 117, "Doverennost",
+                24, "02.03.2018"), null, null, null, true);
+        EmployeeView employeeView3 = new EmployeeView(0, "Petr", "Petrov",
+                "Petrovich", new PositionView(0, "Pekar"), new DocTypeView(0, 117, "Doverennost",
+                24, "02.03.2018"), null, null, null, true);
+        try {
+            HttpStatus hs1 = restTemplate.postForObject(BASE_URI + "/user/save", employeeView1, HttpStatus.class);
+            HttpStatus hs2 = restTemplate.postForObject(BASE_URI + "/user/save", employeeView2, HttpStatus.class);
+            HttpStatus hs3 = restTemplate.postForObject(BASE_URI + "/user/save", employeeView3, HttpStatus.class);
+        } catch (HttpClientErrorException e){
+            LOG.info("Create employees error: {}", e);
+        }
+    }
+
     @Test
     public void filterEmployees() throws Exception {
-        Employee employee = new Employee(0, "Ivan", "", "", new Position(),
-                new DocType(), new Citizenship(), new Phone(), true);
+        EmployeeView employeeView = new EmployeeView(0, "Ivan", "", "", new PositionView(),
+                new DocTypeView(), new CitizenshipView(), new PhoneView(), new OfficeView(), true);
 
         try {
-            List<Employee> employeeList = Arrays.asList(restTemplate.postForObject(BASE_URI + "/user/list", employee, Employee[].class));
-            assertNotNull(employeeList);
-            assertThat(employeeList.get(0).getId(), is(2));
-            assertThat(employeeList.get(0).getFirstName(), is("Ivan"));
-            assertThat(employeeList.get(0).getSecondName(), is("Ivanov"));
-            assertThat(employeeList.get(0).getMiddleName(), is("Ivanovich"));
+            List<EmployeeView> employeeViewList = Arrays.asList(restTemplate.postForObject(BASE_URI + "/user/list", employeeView, EmployeeView[].class));
+            assertNotNull(employeeViewList);
+            assertThat(employeeViewList.get(0).getId(), is(1));
+            assertThat(employeeViewList.get(0).getFirstName(), is("Ivan"));
+            assertThat(employeeViewList.get(0).getSecondName(), is("Ivanov"));
+            assertThat(employeeViewList.get(0).getMiddleName(), is("Ivanovich"));
+            assertThat(employeeViewList.get(0).getPositionView().getName(), is("Ingener"));
         } catch (HttpClientErrorException e){
             assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        };
+        }
     }
 
     @Test
     public void deleteEmployeeById() throws Exception {
         try {
-            HttpStatus hs = restTemplate.getForObject(BASE_URI + "/user/1", HttpStatus.class);
+            HttpStatus hs = restTemplate.getForObject(BASE_URI + "/user/2", HttpStatus.class);
             assertThat(hs, is(HttpStatus.OK));
         } catch (HttpClientErrorException e){
             assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -62,44 +87,47 @@ public class EmployeeControllerIntegrationTest {
 
     @Test
     public void updateEmployee() throws Exception {
-        Position position = new Position(0, "newPosition");
-        DocType docType = new DocType(0, 432, "newDocName", 21, "02.03.2018");
-        Citizenship citizenship = new Citizenship(0, "newCitizenshipName", 232);
-        Phone phone = new Phone(0, "89179999999");
-        Employee employee = new Employee(1, "newFirstName", "newSecondName",
-                "newMiddleName", position, docType, citizenship, phone,true);
+        PositionView positionView = new PositionView(0, "newPosition");
+        DocTypeView docTypeView = new DocTypeView(0, 432, "newDocName", 21, "02.03.2018");
+        CitizenshipView citizenshipView = new CitizenshipView(0, "newCitizenshipName", 232);
+        PhoneView phoneView = new PhoneView(0, "89179999999");
+        EmployeeView employeeView = new EmployeeView(3, "newFirstName", "newSecondName",
+                "newMiddleName", positionView, docTypeView, citizenshipView, phoneView, null, true);
 
         try {
-            HttpStatus hs = restTemplate.postForObject(BASE_URI + "/user/update", employee, HttpStatus.class);
+            HttpStatus hs = restTemplate.postForObject(BASE_URI + "/user/update", employeeView, HttpStatus.class);
             assertThat(hs, is(HttpStatus.OK));
-        } catch (HttpClientErrorException e){
-            assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        };
-    }
-
-    @Test
-    public void saveEmployee() throws Exception {
-        Position position = new Position(0, "newPosition");
-        DocType docType = new DocType(0, 432, "newDocName", 21, "02.03.2018");
-        Citizenship citizenship = new Citizenship(0, "newCitizenshipName", 232);
-        Phone phone = new Phone(0, "89179999999");
-        Employee employee = new Employee(0, "newFirstName", "newSecondName",
-                "newMiddleName", position, docType, citizenship, phone,true);
-
-        try {
-            HttpStatus hs = restTemplate.postForObject(BASE_URI + "/user/save", employee, HttpStatus.class);
-            assertThat(hs, is(HttpStatus.CREATED));
         } catch (HttpClientErrorException e){
             assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
         }
     }
 
-    public static String asJsonString(final Object obj) {
+    @Test
+    public void saveEmployee() throws Exception {
+        PositionView positionView = new PositionView(0, "newPosition");
+        DocTypeView docTypeView = new DocTypeView(0, 432, "newDocName", 21, "02.03.2018");
+        CitizenshipView citizenshipView = new CitizenshipView(0, "newCitizenshipName", 232);
+        PhoneView phoneView = new PhoneView(0, "89179999999");
+        EmployeeView employeeView = new EmployeeView(0, "newFirstName", "newSecondName",
+                "newMiddleName", positionView, docTypeView, citizenshipView, phoneView, null, true);
+
         try {
-            final ObjectMapper mapper = new ObjectMapper();
-            return mapper.writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            HttpStatus hs = restTemplate.postForObject(BASE_URI + "/user/save", employeeView, HttpStatus.class);
+            assertThat(hs, is(HttpStatus.OK));
+        } catch (HttpClientErrorException e){
+            assertThat(e.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        }
+    }
+
+    @After
+    public void deleteEmployees() {
+        try {
+            HttpStatus hs1 = restTemplate.getForObject(BASE_URI + "/user/1", HttpStatus.class);
+            HttpStatus hs2 = restTemplate.getForObject(BASE_URI + "/user/2", HttpStatus.class);
+            HttpStatus hs3 = restTemplate.getForObject(BASE_URI + "/user/3", HttpStatus.class);
+            HttpStatus hs4 = restTemplate.getForObject(BASE_URI + "/user/4", HttpStatus.class);
+        } catch (HttpClientErrorException e){
+            LOG.info("Delete employees error: {}", e);
         }
     }
 }

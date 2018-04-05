@@ -1,7 +1,7 @@
 package ru.bellintegrator.eas.office.service;
 
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.office.model.Office;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
 
 import java.util.List;
 
@@ -10,11 +10,11 @@ import java.util.List;
  */
 public interface OfficeService {
     /**
-     * @param office
-     * @return List<Office>
+     * @param officeView
+     * @return List<OfficeView>
      * @throws DataAccessError If an exception access data
      */
-    List<Office> filterOffices(Office office) throws DataAccessError;
+    List<OfficeView> filterOffices(OfficeView officeView) throws DataAccessError;
 
     /**
      * @param id
@@ -24,14 +24,14 @@ public interface OfficeService {
     boolean deleteOfficeById(int id) throws DataAccessError;
 
     /**
-     * @param office
+     * @param officeView
      * @throws DataAccessError If an exception access data
      */
-    void updateOffice(Office office) throws DataAccessError;
+    void updateOffice(OfficeView officeView) throws DataAccessError;
 
     /**
-     * @param office
+     * @param officeView
      * @throws DataAccessError If an exception access data
      */
-    void saveOffice(Office office) throws DataAccessError;
+    void saveOffice(OfficeView officeView) throws DataAccessError;
 }

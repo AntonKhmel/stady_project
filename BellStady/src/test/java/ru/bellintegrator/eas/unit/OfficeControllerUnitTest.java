@@ -14,13 +14,13 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.bellintegrator.eas.office.controller.OfficeController;
-import ru.bellintegrator.eas.office.model.Office;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
 import ru.bellintegrator.eas.office.service.OfficeService;
-import ru.bellintegrator.eas.organization.model.Organization;
-import ru.bellintegrator.eas.organization.model.address.Address;
-import ru.bellintegrator.eas.organization.model.address.dependent.*;
-import ru.bellintegrator.eas.organization.model.phone.Phone;
-import ru.bellintegrator.eas.organization.model.requisite.Requisite;
+import ru.bellintegrator.eas.organization.model.view.OrganizationView;
+import ru.bellintegrator.eas.organization.model.view.address.AddressView;
+import ru.bellintegrator.eas.organization.model.view.address.dependent.*;
+import ru.bellintegrator.eas.organization.model.view.phone.PhoneView;
+import ru.bellintegrator.eas.organization.model.view.requisite.RequisiteView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,23 +54,23 @@ public class OfficeControllerUnitTest {
 
     @Test
     public void filterOffices() throws Exception {
-        Organization organization = new Organization(1, "", "", new Requisite(), new Address(), new Phone(), true);
-                List<Office> officeList = Arrays.asList(new Office(3, "Milex", new Address(),
-                        new Organization(), new Phone(), true));
-        Office office = new Office(1, "Milex", new Address(), organization, new Phone(), false);
+        OrganizationView organizationView = new OrganizationView(1, "", "", new RequisiteView(), new AddressView(), new PhoneView(), true);
+                List<OfficeView> officeViewList = Arrays.asList(new OfficeView(3, "Milex", new AddressView(),
+                        new OrganizationView(), new PhoneView(), true));
+        OfficeView officeView = new OfficeView(1, "Milex", new AddressView(), organizationView, new PhoneView(), false);
 
-        when(officeService.filterOffices(office)).thenReturn(officeList);
+        when(officeService.filterOffices(officeView)).thenReturn(officeViewList);
 
         mockMvc.perform(post("/api/office/list")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(asJsonString(office)))
+                .content(asJsonString(officeView)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(3)))
                 .andExpect(jsonPath("$[0].name", is("Milex")))
                 .andExpect(jsonPath("$[0].isActive", is(true)));
 
-        verify(officeService, times(1)).filterOffices(office);
+        verify(officeService, times(1)).filterOffices(officeView);
         verifyNoMoreInteractions(officeService);
     }
 
@@ -90,47 +90,47 @@ public class OfficeControllerUnitTest {
 
     @Test
     public void updateOffice() throws Exception {
-        Country cauntry = new Country(0, "newCountry", 0);
-        Region region = new Region(0, "newRegion");
-        City city = new City(0, "newCity");
-        Street street = new Street(0, "newStreet");
-        House house = new House(0, "21C", 32, "4A");
-        Address address = new Address(0, cauntry, region, city, street, house);
-        Phone phone = new Phone(0, "89174444444");
-        Office office = new Office(3, "newNameOffice", address, new Organization(), phone, true);
+        CountryView cauntryView = new CountryView(0, "newCountry", 0);
+        RegionView regionView = new RegionView(0, "newRegion");
+        CityView cityView = new CityView(0, "newCity");
+        StreetView streetView = new StreetView(0, "newStreet");
+        HouseView houseView = new HouseView(0, "21C", 32, "4A");
+        AddressView addressView = new AddressView(0, cauntryView, regionView, cityView, streetView, houseView);
+        PhoneView phoneView = new PhoneView(0, "89174444444");
+        OfficeView officeView = new OfficeView(3, "newNameOffice", addressView, new OrganizationView(), phoneView, true);
 
-        doNothing().when(officeService).updateOffice(office);
+        doNothing().when(officeService).updateOffice(officeView);
 
         mockMvc.perform(
                 post("/api/office/update")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(office)))
+                        .content(asJsonString(officeView)))
                 .andExpect(status().isOk());
 
-        verify(officeService, times(1)).updateOffice(office);
+        verify(officeService, times(1)).updateOffice(officeView);
         verifyNoMoreInteractions(officeService);
     }
 
     @Test
     public void saveOffice() throws Exception {
-        Country cauntry = new Country(0, "newCountry", 0);
-        Region region = new Region(0, "newRegion");
-        City city = new City(0, "newCity");
-        Street street = new Street(0, "newStreet");
-        House house = new House(0, "22M", 32, "4M");
-        Address address = new Address(0, cauntry, region, city, street, house);
-        Phone phone = new Phone(0, "89175555555");
-        Office office = new Office(0, "nameOffice", address, new Organization(), phone, true);
+        CountryView cauntryView = new CountryView(0, "newCountry", 0);
+        RegionView regionView = new RegionView(0, "newRegion");
+        CityView cityView = new CityView(0, "newCity");
+        StreetView streetView = new StreetView(0, "newStreet");
+        HouseView houseView = new HouseView(0, "22M", 32, "4M");
+        AddressView addressView = new AddressView(0, cauntryView, regionView, cityView, streetView, houseView);
+        PhoneView phoneView = new PhoneView(0, "89175555555");
+        OfficeView officeView = new OfficeView(0, "nameOffice", addressView, new OrganizationView(), phoneView, true);
 
-        doNothing().when(officeService).saveOffice(office);
+        doNothing().when(officeService).saveOffice(officeView);
 
         mockMvc.perform(
                 post("/api/office/save")
                         .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                        .content(asJsonString(office)))
-                .andExpect(status().isCreated());
+                        .content(asJsonString(officeView)))
+                .andExpect(status().isOk());
 
-        verify(officeService, times(1)).saveOffice(office);
+        verify(officeService, times(1)).saveOffice(officeView);
         verifyNoMoreInteractions(officeService);
     }
 

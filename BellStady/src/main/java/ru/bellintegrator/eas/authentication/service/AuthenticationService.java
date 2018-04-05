@@ -1,29 +1,29 @@
 package ru.bellintegrator.eas.authentication.service;
 
-import ru.bellintegrator.eas.authentication.model.Activation;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.exception.DataAccessError;
-import ru.bellintegrator.eas.authentication.model.Authentication;
 
 /**
  * @author Хмель А.В.
  */
 public interface AuthenticationService {
     /**
-     * @param authentication
+     * @param authenticationView
      * @throws DataAccessError If an exception access data
      */
-    void registration(Authentication authentication) throws DataAccessError;
+    void registration(AuthenticationView authenticationView) throws DataAccessError;
 
     /**
      * @return Activation
      * @throws DataAccessError If an exception access data
      */
-    Activation sendActivationCode() throws DataAccessError;
+    ActivationView sendActivationCode() throws DataAccessError;
 
     /**
-     * @param authentication
+     * @param authenticationView
      * @return boolean
      * @throws DataAccessError If an exception access data
      */
-    boolean checkAuthentication(Authentication authentication) throws DataAccessError;
+    boolean checkAuthentication(AuthenticationView authenticationView) throws DataAccessError;
 }

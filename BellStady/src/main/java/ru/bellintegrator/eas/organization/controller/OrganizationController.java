@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.organization.model.Organization;
+import ru.bellintegrator.eas.organization.model.view.OrganizationView;
 import ru.bellintegrator.eas.organization.service.OrganizationService;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Хмель А.В.
- * class Controller for processing requests associated with the object the Organization and calling business logic
+ * class Controller for processing requests associated with the object the OrganizationView and calling business logic
  */
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
@@ -31,62 +32,62 @@ public class OrganizationController {
     /**
      * processes a request for getting list organizations by filters name, inn, isActive,
      * and calls the corresponding method of business logic
-     * @param organization
-     * @return List<Organization>
+     * @param organizationView
+     * @return List<OrganizationView>
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/list", method = {POST})
-    public List<Organization> filterOrganizations(@RequestBody Organization organization) throws DataAccessError {
+    public List<OrganizationView> filterOrganizations(@RequestBody OrganizationView organizationView) throws DataAccessError {
         LOG.info("getting list organizations by filter");
 
-        List<Organization> organizationList = organizationService.filterOrganizations(organization);
+        List<OrganizationView> organizationViewList = organizationService.filterOrganizations(organizationView);
 
-        return organizationList;
+        return organizationViewList;
     }
 
     /**
      * processes a request for get the Organization by id
      * @param id
-     * @return Organization
+     * @return OrganizationView
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/{id}", method= {GET})
-    public Organization getOrganizationById(@PathVariable("id") int id) throws DataAccessError {
+    public OrganizationView getOrganizationById(@PathVariable("id") int id) throws DataAccessError {
         LOG.info("get the organization by id: {}", id);
 
-        Organization organization = organizationService.getOrganizationById(id);
+        OrganizationView organizationView = organizationService.getOrganizationById(id);
 
-        return organization;
+        return organizationView;
     }
 
     /**
      * processes a request for update the Organization
-     * @param organization
+     * @param organizationView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/update", method = {POST})
-    public HttpStatus updateOrganization(@RequestBody Organization organization) throws DataAccessError {
-        LOG.info("update the organization: {}", organization);
+    public HttpStatus updateOrganization(@RequestBody OrganizationView organizationView) throws DataAccessError {
+        LOG.info("update the organization: {}", organizationView);
 
-        organizationService.updateOrganization(organization);
+        organizationService.updateOrganization(organizationView);
 
         return HttpStatus.OK;
     }
 
     /**
      * processes a request for save the Organization
-     * @param organization
+     * @param organizationView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/organization/save", method = {POST})
-    public HttpStatus saveOrganization(@RequestBody Organization organization) throws DataAccessError {
-        LOG.info("save the organization: {}", organization);
+    public HttpStatus saveOrganization(@RequestBody OrganizationView organizationView) throws DataAccessError {
+        LOG.info("save the organization: {}", organizationView);
 
-        organizationService.saveOrganization(organization);
+        organizationService.saveOrganization(organizationView);
 
-        return HttpStatus.CREATED;
+        return HttpStatus.OK;
     }
 
     /**

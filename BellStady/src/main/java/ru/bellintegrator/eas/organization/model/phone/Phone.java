@@ -49,7 +49,7 @@ public class Phone {
         this.number = number;
     }
 
-// equals and hashCode
+    // equals and hashCode
 
     @Override
     public boolean equals(Object o) {

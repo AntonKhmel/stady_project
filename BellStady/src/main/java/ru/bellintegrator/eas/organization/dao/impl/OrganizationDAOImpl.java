@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.organization.dao.OrganizationDAO;
 import ru.bellintegrator.eas.organization.model.Organization;
+import ru.bellintegrator.eas.organization.model.view.OrganizationView;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,20 +30,20 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 
      // get a list of organizations by filters name, inn, isActive
     @Override
-    public List<Organization> filterOrganizations(Organization organization) throws DataAccessError {
+    public List<Organization> filterOrganizations(OrganizationView organizationView) throws DataAccessError {
         try {
             CriteriaBuilder builder = entityManager.getCriteriaBuilder();
             CriteriaQuery<Organization> criteria = builder.createQuery(Organization.class);
 
             Root<Organization> root = criteria.from(Organization.class);
-            if (organization != null) {
-                if (organization.getName() != null && !organization.getName().isEmpty()) {
-                    criteria.where(builder.equal(root.get("name"), organization.getName()));
-                    if (organization.getRequisite() != null && organization.getRequisite().getInn() != null
-                            && !organization.getRequisite().getInn().isEmpty()) {
-                        criteria.where(builder.equal(root.get("recvisit").get("inn"), organization.getRequisite().getInn()));
-                        if (organization.getIsActive()) {
-                            criteria.where(builder.equal(root.get("isActive"), organization.getIsActive()));
+            if (organizationView != null) {
+                if (organizationView.getName() != null && !organizationView.getName().isEmpty()) {
+                    criteria.where(builder.equal(root.get("name"), organizationView.getName()));
+                    if (organizationView.getRequisiteView() != null && organizationView.getRequisiteView().getInn() != null
+                            && !organizationView.getRequisiteView().getInn().isEmpty()) {
+                        criteria.where(builder.equal(root.get("recvisit").get("inn"), organizationView.getRequisiteView().getInn()));
+                        if (organizationView.getIsActive()) {
+                            criteria.where(builder.equal(root.get("isActive"), organizationView.getIsActive()));
                         }
                     }
                 }
@@ -78,24 +79,23 @@ public class OrganizationDAOImpl implements OrganizationDAO {
 
     // update the organization
     @Override
-    public void updateOrganization(Organization organization) throws DataAccessError {
+    public void updateOrganization(OrganizationView organizationView) throws DataAccessError {
         try {
-            Organization getOrganization = entityManager.find(Organization.class, organization.getId());
-            getOrganization.setName(organization.getName());
-            getOrganization.setFullName(organization.getFullName());
-            getOrganization.getRequisite().setInn(organization.getRequisite().getInn());
-            getOrganization.getRequisite().setCpp(organization.getRequisite().getCpp());
-            getOrganization.getAddress().getCountry().setName(organization.getAddress().getCountry().getName());
-            getOrganization.getAddress().getCountry().setCode(organization.getAddress().getCountry().getCode());
-            getOrganization.getAddress().getRegion().setName(organization.getAddress().getRegion().getName());
-            getOrganization.getAddress().getCity().setName(organization.getAddress().getCity().getName());
-            getOrganization.getAddress().getStreet().setName(organization.getAddress().getStreet().getName());
-            getOrganization.getAddress().getHouse().setNumberHouse(organization.getAddress().getHouse().getNumberHouse());
-            getOrganization.getAddress().getHouse().setNumberFlat(organization.getAddress().getHouse().getNumberFlat());
-            getOrganization.getAddress().getHouse().setNumberOffice(organization.getAddress().getHouse().getNumberOffice());
-            getOrganization.getPhone().setNumber(organization.getPhone().getNumber());
-            getOrganization.setIsActive(organization.getIsActive());
-            entityManager.merge(getOrganization);
+            Organization organization = entityManager.find(Organization.class, organizationView.getId());
+            organization.setName(organizationView.getName());
+            organization.setFullName(organizationView.getFullName());
+            organization.getRequisite().setInn(organizationView.getRequisiteView().getInn());
+            organization.getRequisite().setCpp(organizationView.getRequisiteView().getCpp());
+            organization.getAddress().getCountry().setName(organizationView.getAddressView().getCountryView().getName());
+            organization.getAddress().getRegion().setName(organizationView.getAddressView().getRegionView().getName());
+            organization.getAddress().getCity().setName(organizationView.getAddressView().getCityView().getName());
+            organization.getAddress().getStreet().setName(organizationView.getAddressView().getStreetView().getName());
+            organization.getAddress().getHouse().setNumberHouse(organizationView.getAddressView().getHouseView().getNumberHouse());
+            organization.getAddress().getHouse().setNumberFlat(organizationView.getAddressView().getHouseView().getNumberFlat());
+            organization.getAddress().getHouse().setNumberOffice(organizationView.getAddressView().getHouseView().getNumberOffice());
+            organization.getPhone().setNumber(organizationView.getPhoneView().getNumber());
+            organization.setIsActive(organizationView.getIsActive());
+            entityManager.merge(organization);
 
             LOG.info("update the organization");
         } catch (Exception ex) {

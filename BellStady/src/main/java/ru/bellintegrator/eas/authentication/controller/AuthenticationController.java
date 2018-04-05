@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bellintegrator.eas.authentication.model.Activation;
-import ru.bellintegrator.eas.authentication.model.Authentication;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.authentication.service.AuthenticationService;
 import ru.bellintegrator.eas.exception.DataAccessError;
 
@@ -17,7 +17,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * @author Хмель А.В.
- * class Controller for processing requests associated with the object the Authentication and calling business logic
+ * class Controller for processing requests associated with the object the AuthenticationView and calling business logic
  */
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
@@ -29,44 +29,44 @@ public class AuthenticationController {
 
     /**
      * processes a request for save registration
-     * @param authentication
+     * @param authenticationView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/registr", method = {POST})
-    public HttpStatus registration(@RequestBody Authentication authentication) throws DataAccessError {
-        LOG.info("creating new registration: {}", authentication);
+    public HttpStatus registration(@RequestBody AuthenticationView authenticationView) throws DataAccessError {
+        LOG.info("creating new registration: {}", authenticationView);
 
-        authenticationService.registration(authentication);
+        authenticationService.registration(authenticationView);
 
-        return HttpStatus.CREATED;
+        return HttpStatus.OK;
     }
 
     /**
      * processes a request for send activation code
-     * @return Activation
+     * @return ActivationView
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/activation/code", method= {GET})
-    public Activation sendActivationCode() throws DataAccessError {
+    public ActivationView sendActivationCode() throws DataAccessError {
         LOG.info("sended activation code");
 
-        Activation activation = authenticationService.sendActivationCode();
+        ActivationView activationView = authenticationService.sendActivationCode();
 
-        return activation;
+        return activationView;
     }
 
     /**
      * processes a request for check authentication
-     * @param authentication
+     * @param authenticationView
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
     @RequestMapping(value = "/login", method= RequestMethod.POST)
-    public HttpStatus checkAuthentication(@RequestBody Authentication authentication) throws DataAccessError {
-        LOG.info("check authentication: {}", authentication);
+    public HttpStatus checkAuthentication(@RequestBody AuthenticationView authenticationView) throws DataAccessError {
+        LOG.info("check authentication: {}", authenticationView);
 
-        boolean check = authenticationService.checkAuthentication(authentication);
+        boolean check = authenticationService.checkAuthentication(authenticationView);
 
         if (check) {
             return HttpStatus.OK;

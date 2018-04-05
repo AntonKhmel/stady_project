@@ -14,8 +14,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.bellintegrator.eas.authentication.controller.AuthenticationController;
-import ru.bellintegrator.eas.authentication.model.Activation;
-import ru.bellintegrator.eas.authentication.model.Authentication;
+import ru.bellintegrator.eas.authentication.model.view.ActivationView;
+import ru.bellintegrator.eas.authentication.model.view.AuthenticationView;
 import ru.bellintegrator.eas.authentication.service.AuthenticationService;
 
 import static org.hamcrest.Matchers.is;
@@ -46,29 +46,29 @@ public class AuthenticationControllerUnitTest {
 
     @Test
     public void registration() throws Exception {
-        Authentication authentication = new Authentication(0, "Admin", "123456", "Anton");
+        AuthenticationView authenticationView = new AuthenticationView(0, "Admin", "123456", "Anton");
 
-        doNothing().when(authenticationService).registration(authentication);
+        doNothing().when(authenticationService).registration(authenticationView);
 
         mockMvc.perform(post("/api/registr")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(asJsonString(authentication)))
-                .andExpect(status().isCreated());
+                .content(asJsonString(authenticationView)))
+                .andExpect(status().isOk());
 
-        verify(authenticationService, times(1)).registration(authentication);
+        verify(authenticationService, times(1)).registration(authenticationView);
         verifyNoMoreInteractions(authenticationService);
     }
 
     @Test
     public void sendActivationCode() throws Exception {
-        Activation activation = new Activation();
+        ActivationView activationView = new ActivationView();
 
-        when(authenticationService.sendActivationCode()).thenReturn(activation);
+        when(authenticationService.sendActivationCode()).thenReturn(activationView);
 
         mockMvc.perform(get("/api/activation/code"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.value", is(activation.getValue())));
+                .andExpect(jsonPath("$.value", is(activationView.getValue())));
 
         verify(authenticationService, times(1)).sendActivationCode();
         verifyNoMoreInteractions(authenticationService);
@@ -76,17 +76,17 @@ public class AuthenticationControllerUnitTest {
 
     @Test
     public void checkAuthentication() throws Exception {
-        Authentication authentication = new Authentication(0, "user", "password", "");
+        AuthenticationView authenticationView = new AuthenticationView(0, "user", "password", "");
         boolean check = true;
 
-        when(authenticationService.checkAuthentication(authentication)).thenReturn(check);
+        when(authenticationService.checkAuthentication(authenticationView)).thenReturn(check);
 
         mockMvc.perform(post("/api/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(asJsonString(authentication)))
+                .content(asJsonString(authenticationView)))
                 .andExpect(status().isOk());
 
-        verify(authenticationService, times(1)).checkAuthentication(authentication);
+        verify(authenticationService, times(1)).checkAuthentication(authenticationView);
         verifyNoMoreInteractions(authenticationService);
     }
 

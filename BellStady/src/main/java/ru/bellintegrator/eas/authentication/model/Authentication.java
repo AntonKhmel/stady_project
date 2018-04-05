@@ -48,7 +48,7 @@ public class Authentication {
     }
 
     /**
-     * constructor for the hibernate
+     * constructor jackson
      */
     public Authentication() {
     }

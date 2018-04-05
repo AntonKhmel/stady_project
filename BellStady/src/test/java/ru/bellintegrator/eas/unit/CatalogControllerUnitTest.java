@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.bellintegrator.eas.catalog.controller.CatalogController;
 import ru.bellintegrator.eas.catalog.service.CatalogService;
-import ru.bellintegrator.eas.employee.model.dependent.DocType;
-import ru.bellintegrator.eas.organization.model.address.dependent.Country;
+import ru.bellintegrator.eas.employee.model.view.dependent.DocTypeView;
+import ru.bellintegrator.eas.organization.model.view.address.dependent.CountryView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -48,9 +48,9 @@ public class CatalogControllerUnitTest {
 
     @Test
     public void allDocs() throws Exception {
-        List<DocType> docTypeList = Arrays.asList(new DocType(0, 377, "Nacladnaya", 0, null));
+        List<DocTypeView> docTypeViewList = Arrays.asList(new DocTypeView(0, 377, "Nacladnaya", 0, null));
 
-        when(catalogService.allDocs()).thenReturn(docTypeList);
+        when(catalogService.allDocs()).thenReturn(docTypeViewList);
 
         mockMvc.perform(post("/api/docs"))
                 .andExpect(status().isOk())
@@ -65,9 +65,9 @@ public class CatalogControllerUnitTest {
 
     @Test
     public void allCountries() throws Exception {
-        List<Country> countryList = Arrays.asList(new Country(0, "Russia", 172));
+        List<CountryView> countryViewList = Arrays.asList(new CountryView(0, "Russia", 172));
 
-        when(catalogService.allCountries()).thenReturn(countryList);
+        when(catalogService.allCountries()).thenReturn(countryViewList);
 
         mockMvc.perform(post("/api/countries"))
                 .andExpect(status().isOk())

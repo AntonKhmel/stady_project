@@ -2,6 +2,7 @@ package ru.bellintegrator.eas.office.dao;
 
 import ru.bellintegrator.eas.exception.DataAccessError;
 import ru.bellintegrator.eas.office.model.Office;
+import ru.bellintegrator.eas.office.model.view.OfficeView;
 
 import java.util.List;
 
@@ -10,11 +11,11 @@ import java.util.List;
  */
 public interface OfficeDAO {
     /**
-     * @param office
+     * @param officeView
      * @return List<Office>
      * @throws DataAccessError If an exception access data
      */
-    List<Office> filterOffices(Office office) throws DataAccessError;
+    List<Office> filterOffices(OfficeView officeView) throws DataAccessError;
 
     /**
      * @return boolean
@@ -23,10 +24,10 @@ public interface OfficeDAO {
     boolean deleteOfficeById(int id) throws DataAccessError;
 
     /**
-     * @param office
+     * @param officeView
      * @throws DataAccessError If an exception access data
      */
-    void updateOffice(Office office) throws DataAccessError;
+    void updateOffice(OfficeView officeView) throws DataAccessError;
 
     /**
      * @param office
