@@ -15,10 +15,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * @author Хмель А.В.
  * class Controller for processing requests associated with the object the AuthenticationView and calling business logic
  */
+@Api(value = "Authentication", description = "APIs for working with authentication")
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
 public class AuthenticationController {
@@ -33,6 +39,11 @@ public class AuthenticationController {
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "registration", nickname = "registration", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = HttpStatus.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/registr", method = {POST})
     public HttpStatus registration(@RequestBody AuthenticationView authenticationView) throws DataAccessError {
         LOG.info("creating new registration: {}", authenticationView);
@@ -47,6 +58,11 @@ public class AuthenticationController {
      * @return ActivationView
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "sendActivationCode", nickname = "sendActivationCode", httpMethod = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = ActivationView.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/activation/code", method= {GET})
     public ActivationView sendActivationCode() throws DataAccessError {
         LOG.info("sended activation code");
@@ -62,6 +78,11 @@ public class AuthenticationController {
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "checkAuthentication", nickname = "checkAuthentication", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = HttpStatus.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/login", method= RequestMethod.POST)
     public HttpStatus checkAuthentication(@RequestBody AuthenticationView authenticationView) throws DataAccessError {
         LOG.info("check authentication: {}", authenticationView);

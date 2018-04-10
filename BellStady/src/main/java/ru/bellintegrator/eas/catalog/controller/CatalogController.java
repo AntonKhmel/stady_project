@@ -16,10 +16,16 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * @author Хмель А.В.
  * class Controller for processing requests associated with the objects DocumentView and CountryView and calling business logic
  */
+@Api(value = "Catalog", description = "APIs for working with catalog")
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
 public class CatalogController {
@@ -33,6 +39,11 @@ public class CatalogController {
      * @return List<DocTypeView>
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "allDocs", nickname = "allDocs", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = List.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/docs", method = {POST})
     public List<DocTypeView> allDocs() throws DataAccessError {
         LOG.info("getting all docs");
@@ -47,6 +58,11 @@ public class CatalogController {
      * @return List<CountryView>
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "allCountries", nickname = "allCountries", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = List.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/countries", method = {POST})
     public List<CountryView> allCountries() throws DataAccessError {
         LOG.info("getting all countries");
@@ -65,6 +81,6 @@ public class CatalogController {
     public ResponseEntity<String> handleException(Exception exception) {
         LOG.info("exception: {}", exception);
 
-        return new ResponseEntity<String>(exception.getMessage(), HttpStatus.FORBIDDEN);
+        return new ResponseEntity<String>(exception.getMessage(), HttpStatus.NO_CONTENT);
     }
 }

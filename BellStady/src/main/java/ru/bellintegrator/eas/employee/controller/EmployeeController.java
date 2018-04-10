@@ -16,10 +16,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * @author Хмель А.В.
  * class Controller for processing requests associated with the object the EmployeeView and calling business logic
  */
+@Api(value = "Employee", description = "APIs for working with employee")
 @RestController
 @RequestMapping(value="/api", produces = APPLICATION_JSON_UTF8_VALUE)
 public class EmployeeController {
@@ -36,6 +42,11 @@ public class EmployeeController {
      * @return List<EmployeeView>
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "filterEmployees", nickname = "filterEmployees", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = List.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/user/list", method = {POST})
     public List<EmployeeView> filterEmployees(@RequestBody EmployeeView employeeView) throws DataAccessError {
         LOG.info("getting list employees by filter");
@@ -51,6 +62,11 @@ public class EmployeeController {
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "deleteEmployeeById", nickname = "deleteEmployeeById", httpMethod = "GET")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = HttpStatus.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/user/{id}", method= {GET})
     public HttpStatus deleteEmployeeById(@PathVariable("id") int id) throws DataAccessError {
         LOG.info("delete the employee by id: {}", id);
@@ -70,6 +86,11 @@ public class EmployeeController {
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "updateEmployee", nickname = "updateEmployee", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = HttpStatus.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/user/update", method = {POST})
     public HttpStatus updateEmployee(@RequestBody EmployeeView employeeView) throws DataAccessError {
         LOG.info("update the employee: {}", employeeView);
@@ -85,6 +106,11 @@ public class EmployeeController {
      * @return HttpStatus
      * @throws DataAccessError If an exception access data
      */
+    @ApiOperation(value = "saveEmployee", nickname = "saveEmployee", httpMethod = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK", response = HttpStatus.class),
+            @ApiResponse(code = 204, message = "NO_CONTENT"),
+            @ApiResponse(code = 404, message = "NOT_FOUND")})
     @RequestMapping(value = "/user/save", method = {POST})
     public HttpStatus saveEmployee(@RequestBody EmployeeView employeeView) throws DataAccessError {
         LOG.info("save the employee: {}", employeeView);

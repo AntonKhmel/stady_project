@@ -3,15 +3,12 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/mvc
 	   http://www.springframework.org/schema/mvc/spring-mvc.xsd
 	   http://www.springframework.org/schema/context
-	   http://www.springframework.org/schema/context/spring-context.xsd
-	   http://www.springframework.org/schema/tx
-       http://www.springframework.org/schema/tx/spring-tx.xsd">
+	   http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!-- context:component-scan This tag will scan @Component, @Repository, @Service, @Controller
          and also resolves @Autowired and @Qualifier -->
@@ -24,17 +21,6 @@
         from @RequestMapping or @ExceptionHandler methods.
      -->
     <mvc:annotation-driven />
-        <!--<mvc:message-converters>-->
-            <!--<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">-->
-                <!--<property name="objectMapper" ref="jacksonObjectMapper" />-->
-            <!--</bean>-->
-        <!--</mvc:message-converters>-->
-    <!--</mvc:annotation-driven>-->
-
-    <!--<bean id="jacksonObjectMapper" class="ru.bellintegrator.eas.mapper.MyJsonMapper" />-->
-
-    <!-- activate @Transactional JPA annotation -->
-    <tx:annotation-driven/>
 
     <!-- ViewResolver bean config for mapping strings to jsp views -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
@@ -46,6 +32,14 @@
 
     <mvc:view-controller path="/orm.html" view-name="/main/index"/>
 
+    <context:annotation-config />
+    <bean class="ru.bellintegrator.eas.configuration.Swagger2UiConfiguration" />
+
+    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
+    <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
+    <!-- Serve static content-->
+    <mvc:default-servlet-handler/>
 
     <!-- Static Resources Configuration (get access to static sources such as CSS) -->
     <mvc:resources mapping="/resources/**" location="/resources/" />

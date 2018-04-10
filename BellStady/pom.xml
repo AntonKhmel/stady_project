@@ -17,7 +17,7 @@
         <servlet.version>3.1.0</servlet.version>
 
         <!-- Spring -->
-        <spring-framework.version>4.2.4.RELEASE</spring-framework.version>
+        <spring-framework.version>4.3.9.RELEASE</spring-framework.version>
 
         <!-- JUnit test -->
         <junit.version>4.12</junit.version>
@@ -28,33 +28,47 @@
         <slf4j.version>1.7.5</slf4j.version>
 
         <!-- Hibernate / JPA -->
-        <hibernate.version>5.0.1.Final</hibernate.version>
+        <hibernate.version>5.2.12.Final</hibernate.version>
 
         <!-- Spring Data -->
-        <spring-framework.data.version>1.9.1.RELEASE</spring-framework.data.version>
-
-
-        <jackson.version>2.5.3</jackson.version>
+        <jackson.version>2.9.4</jackson.version>
     </properties>
-
-    <dependencyManagement>
-        <!--all spring dependencies -->
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
         <!-- Spring MVC -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- Spring Core -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- Spring JDBC -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- Spring ORM -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring-framework.version}</version>
+        </dependency>
+
+        <!-- Test Artifacts with Spring-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring-framework.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Other Servlet Web dependencies -->
@@ -86,19 +100,6 @@
             <version>2.3.3</version>
         </dependency>
 
-        <!-- Spring JDBC -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
-
-        <!-- Test Artifacts with Spring-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Logging with SLF4J & LogBack -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -120,11 +121,19 @@
             <version>${hibernate.version}</version>
         </dependency>
 
-        <!--Hibernate validator (contains @NotEmpty)-->
+        <!--Hibernate validator-->
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.1.0.Final</version>
+            <version>6.0.7.Final</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml/classmate -->
+        <dependency>
+            <groupId>com.fasterxml</groupId>
+            <artifactId>classmate</artifactId>
+            <version>1.3.4</version>
         </dependency>
 
         <dependency>
@@ -133,14 +142,19 @@
             <version>${jackson.version}</version>
         </dependency>
 
-        <!--Spring Data-->
         <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>${spring-framework.data.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.7.0</version>
         </dependency>
 
-        <!-- testing -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -153,12 +167,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -171,6 +187,7 @@
             </exclusions>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
             <artifactId>json-path-assert</artifactId>
@@ -203,18 +220,6 @@
                     <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
-            <!--<plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <version>1.0.0.Final</version>
-                <configuration>
-                    <hostname>127.0.0.1</hostname>
-                    <port>9992</port>
-                    <username>admin</username>
-                    <password>admin</password>
-                    <name>bell_stady.war</name>
-                </configuration>
-            </plugin>-->
         </plugins>
 
         <testResources>
